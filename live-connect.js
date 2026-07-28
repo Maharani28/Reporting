@@ -57,6 +57,8 @@ async function ensureMsalInit(){
   _msalInitialized = true;
 }
 
+let _loginInFlight = null; // shared promise guard: only one interactive login at a time
+
 async function getToken(){
   await ensureMsalInit();
   const request = { scopes: ["https://analysis.windows.net/powerbi/api/Dataset.Read.All"] };
@@ -67,8 +69,30 @@ async function getToken(){
       return res.accessToken;
     }catch(e){ /* fall through to interactive */ }
   }
-  const res = await msalInstance.loginPopup(request);
-  return res.accessToken;
+  // If a popup login is already underway from a concurrent call, wait for
+  // that same one instead of opening a second popup (which MSAL rejects
+  // with "interaction_in_progress").
+  if(_loginInFlight){
+    const res = await _loginInFlight;
+    return res.accessToken;
+  }
+  _loginInFlight = msalInstance.loginPopup(request);
+  try{
+    const res = await _loginInFlight;
+    return res.accessToken;
+  }finally{
+    _loginInFlight = null;
+  }
+}
+
+// Explicitly sign in once, before any DAX queries fire. Called at the top
+// of loadLive() so that by the time the six queries run in parallel, an
+// account is already cached and each one resolves via the fast, silent,
+// non-interactive path -- no popup race.
+async function ensureSignedIn(){
+  await ensureMsalInit();
+  if(msalInstance.getAllAccounts().length > 0) return;
+  await getToken();
 }
 
 // ---------------------------------------------------------------------------
@@ -277,9 +301,13 @@ function splitGoal(combinedGoal, subA, subB, wonBySubmarket){
 // ---------------------------------------------------------------------------
 async function loadLive(){
   const el = document.getElementById('loadingMsg');
-  if(el) el.innerHTML = 'Signing in and querying the live model&hellip;';
+  if(el) el.innerHTML = 'Signing in&hellip;';
 
   try{
+    await ensureSignedIn();
+
+    if(el) el.innerHTML = 'Querying the live model&hellip;';
+
     const [clientRowsRaw, goalRows, perfRows, pipeRowsRaw, convRowsRaw, goalTrackerRows] = await Promise.all([
       runDax(DAX_QUERIES.clientLevel),
       runDax(DAX_QUERIES.producerGoals),
