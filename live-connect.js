@@ -27,10 +27,10 @@
    ============================================================================ */
 
 const PBI_CONFIG = {
-  TENANT_ID:    "YOUR_TENANT_ID_HERE",
-  CLIENT_ID:    "YOUR_APP_CLIENT_ID_HERE",
-  WORKSPACE_ID: "YOUR_WORKSPACE_ID_HERE",
-  DATASET_ID:   "YOUR_DATASET_ID_HERE",
+  TENANT_ID:    "11bfe7ed-a96d-47b8-93b9-f1d5ced7091b",
+  CLIENT_ID:    "026eb3d4-356a-4d3b-8f44-7adcd56f75c4",
+  WORKSPACE_ID: "003c3aa9-61d8-4530-b8f7-e64e531babac",
+  DATASET_ID:   "9feaf6d8-5d92-4212-a381-444dbe7ba277",
 };
 
 const D365_BASE = "https://onedigital.crm.dynamics.com/main.aspx?appid=c8495106-ec1a-e911-a952-000d3a1d55a5&pagetype=entityrecord&etn=opportunity&id=";
