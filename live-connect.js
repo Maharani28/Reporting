@@ -17,20 +17,39 @@
       reads:
             try{const bin=atob(SEED); ... parseWorkbook(wb); boot();}
       and replace it with:
-            loadLive();
+            initApp();
+      NOT loadLive() directly -- initApp() checks for a cached MSAL session
+      first. Calling loadLive() (and its loginPopup() call inside getToken())
+      straight from page load with no cached session gets the popup silently
+      blocked by the browser (empty_window_error / popup_window_error), since
+      it isn't a direct user gesture. initApp() shows a "Sign In" button
+      instead when no session is cached, so the popup fires from a real click
+      and succeeds on the first try. Once a session exists, initApp() skips
+      the button and goes straight into loadLive() as before.
       You can also delete the `const SEED = "...";` line and the
       <script src=".../xlsx@0.18.5/..."> tag entirely -- neither is used
       anymore in live mode. parseWorkbook() itself can stay in the file
-      unused, or be deleted; nothing else calls it once loadLive() is wired in.
+      unused, or be deleted; nothing else calls it once initApp() is wired in.
    5. Remove/skip this if you still want a "Refresh Now" button: just call
-      loadLive() again on click; it re-runs everything and re-renders.
+      loadLive() again on click (not initApp() -- a session already exists
+      by then); it re-runs everything and re-renders.
    ============================================================================ */
 
 const PBI_CONFIG = {
-  TENANT_ID:    "11bfe7ed-a96d-47b8-93b9-f1d5ced7091b",
-  CLIENT_ID:    "026eb3d4-356a-4d3b-8f44-7adcd56f75c4",
-  WORKSPACE_ID: "003c3aa9-61d8-4530-b8f7-e64e531babac",
-  DATASET_ID:   "9feaf6d8-5d92-4212-a381-444dbe7ba277",
+  TENANT_ID:    "YOUR_TENANT_ID_HERE",
+  CLIENT_ID:    "YOUR_APP_CLIENT_ID_HERE",
+  WORKSPACE_ID: "YOUR_WORKSPACE_ID_HERE",
+  DATASET_ID:   "YOUR_DATASET_ID_HERE",
+};
+
+// ---------------------------------------------------------------------------
+// SharePoint / Microsoft Graph config -- MMR Leader Input Log
+// Resolved via: GET https://graph.microsoft.com/v1.0/shares/{encoded-url}/driveItem
+// File: MMR_Leader_Input_Log.xlsx, site: PowerBI-CollaborationTeam
+// ---------------------------------------------------------------------------
+const SHAREPOINT_CONFIG = {
+  DRIVE_ID: "b!UpDL1A9FgEGL6TSnvGTjSB5qvG0M8kBHgVt2i-xLcGj3ikKTWNKkRoPWUUZqeQy2",
+  ITEM_ID:  "01JMH5MWOMMVXQBHCXPVHL3GHDYE4GFBUV",
 };
 
 const D365_BASE = "https://onedigital.crm.dynamics.com/main.aspx?appid=c8495106-ec1a-e911-a952-000d3a1d55a5&pagetype=entityrecord&etn=opportunity&id=";
@@ -57,8 +76,6 @@ async function ensureMsalInit(){
   _msalInitialized = true;
 }
 
-let _loginInFlight = null; // shared promise guard: only one interactive login at a time
-
 async function getToken(){
   await ensureMsalInit();
   const request = { scopes: ["https://analysis.windows.net/powerbi/api/Dataset.Read.All"] };
@@ -69,30 +86,88 @@ async function getToken(){
       return res.accessToken;
     }catch(e){ /* fall through to interactive */ }
   }
-  // If a popup login is already underway from a concurrent call, wait for
-  // that same one instead of opening a second popup (which MSAL rejects
-  // with "interaction_in_progress").
-  if(_loginInFlight){
-    const res = await _loginInFlight;
-    return res.accessToken;
-  }
-  _loginInFlight = msalInstance.loginPopup(request);
-  try{
-    const res = await _loginInFlight;
-    return res.accessToken;
-  }finally{
-    _loginInFlight = null;
-  }
+  const res = await msalInstance.loginPopup(request);
+  return res.accessToken;
 }
 
-// Explicitly sign in once, before any DAX queries fire. Called at the top
-// of loadLive() so that by the time the six queries run in parallel, an
-// account is already cached and each one resolves via the fast, silent,
-// non-interactive path -- no popup race.
-async function ensureSignedIn(){
+// ---------------------------------------------------------------------------
+// Graph token -- for writing MMR leader input to the SharePoint Excel log.
+// Reuses the same msalInstance/ensureMsalInit as getToken() above; just a
+// different scope. First call may show a one-time consent popup for
+// Files.ReadWrite even if the user already consented to the Power BI scope.
+// ---------------------------------------------------------------------------
+async function getGraphToken(){
   await ensureMsalInit();
-  if(msalInstance.getAllAccounts().length > 0) return;
-  await getToken();
+  const request = { scopes: ["Files.ReadWrite"] };
+  const accounts = msalInstance.getAllAccounts();
+  if(accounts.length > 0){
+    try{
+      const res = await msalInstance.acquireTokenSilent({ ...request, account: accounts[0] });
+      return res.accessToken;
+    }catch(e){ /* fall through to interactive */ }
+  }
+  const res = await msalInstance.loginPopup(request);
+  return res.accessToken;
+}
+
+// ---------------------------------------------------------------------------
+// Write MMR leader input to the SharePoint Excel log (MMR_Leader_Input_Log.xlsx)
+// via Microsoft Graph. Table names below are the underlying Excel Table
+// names (Table Design tab), NOT the sheet tab names -- confirmed unchanged
+// even after the sheet tabs were renamed to MMR_MonthlyCommit /
+// MMR_DealLevelForecast / MMR_ProducerFocus / MMR_RecentWins.
+// ---------------------------------------------------------------------------
+async function graphAddRows(tableName, rowsArray){
+  if(!rowsArray || !rowsArray.length) return;
+  const token = await getGraphToken();
+  const url = `https://graph.microsoft.com/v1.0/drives/${SHAREPOINT_CONFIG.DRIVE_ID}` +
+              `/items/${SHAREPOINT_CONFIG.ITEM_ID}/workbook/tables('${tableName}')/rows/add`;
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ values: rowsArray })  // rowsArray = [[col1,col2,...], [col1,col2,...]]
+  });
+  if(!res.ok){
+    const err = await res.text();
+    throw new Error(`Graph write to ${tableName} failed (${res.status}): ${err}`);
+  }
+  return res.json();
+}
+
+async function saveMMRToSharePoint(state){
+  const saveId = `${state.market||'ALL'}::${MONTHS[CUR_MONTH_IDX]}${CUR_YEAR}::${Date.now()}`;
+  const savedAtUTC = new Date().toISOString();
+  // Must match the on-screen section headers exactly: "This Month" / "Quarter End" / "Next Month"
+  const HZ_LABEL = { dThis: "This Month", dQtr: "Quarter End", dNext: "Next Month" };
+
+  // AdditionalConfidentToClose_Calculated is NOT a user input -- it's mmrComputeAddl(state),
+  // already computed inside mmrGather(). Stored here as a point-in-time snapshot.
+  await graphAddRows("MMR_Summary", [[
+    saveId, savedAtUTC, state.market, MONTHS[CUR_MONTH_IDX], CUR_YEAR,
+    state.leader, state.commitHz, state.addl, state.nextOpps
+  ]]);
+
+  const dealRows = [];
+  ["dThis","dQtr","dNext"].forEach(hz => {
+    (state[hz]||[]).forEach(d => {
+      if(!d.deal && !d.amt) return; // skip empty rows
+      dealRows.push([saveId, HZ_LABEL[hz], d.deal, d.producer, d.amt, d.close, d.conf, d.notes]);
+    });
+  });
+  if(dealRows.length) await graphAddRows("MMR_Deals", dealRows);
+
+  const prodRows = (state.prod||[])
+    .filter(p => p.producer)
+    .map(p => [saveId, p.producer, p.gap, p.plan, p.outcome]);
+  if(prodRows.length) await graphAddRows("MMR_ProducersBehindPace", prodRows);
+
+  const winRows = (state.wins||[])
+    .filter(w => w.producer)
+    .map(w => [saveId, w.producer, w.deal, w.teeup, w.advance, w.client, w.team]);
+  if(winRows.length) await graphAddRows("MMR_RecentWins", winRows);
 }
 
 // ---------------------------------------------------------------------------
@@ -301,13 +376,9 @@ function splitGoal(combinedGoal, subA, subB, wonBySubmarket){
 // ---------------------------------------------------------------------------
 async function loadLive(){
   const el = document.getElementById('loadingMsg');
-  if(el) el.innerHTML = 'Signing in&hellip;';
+  if(el) el.innerHTML = 'Signing in and querying the live model&hellip;';
 
   try{
-    await ensureSignedIn();
-
-    if(el) el.innerHTML = 'Querying the live model&hellip;';
-
     const [clientRowsRaw, goalRows, perfRows, pipeRowsRaw, convRowsRaw, goalTrackerRows] = await Promise.all([
       runDax(DAX_QUERIES.clientLevel),
       runDax(DAX_QUERIES.producerGoals),
@@ -423,5 +494,38 @@ async function loadLive(){
   }catch(err){
     console.error(err);
     if(el) el.innerHTML = `Live query failed: ${err.message}. <button onclick="loadLive()">Retry</button>`;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Entry point used by the page (replaces the old direct "loadLive();" call).
+//
+// WHY THIS EXISTS: browsers block window.open() popups that aren't triggered
+// by a direct user gesture (click/tap). loadLive() -> getToken() -> loginPopup()
+// used to fire automatically on page load, so on any visit without an existing
+// cached session, the browser silently killed the popup (empty_window_error /
+// popup_window_error) and the user had to click "Retry" -- which worked only
+// because THAT click counted as a real user gesture.
+//
+// FIX: check for a cached MSAL account first.
+//   - Returning visit, session still cached -> straight into loadLive(), silent
+//     token refresh, no popup, no button, unchanged from before.
+//   - First visit / expired session -> show a "Sign In" button immediately
+//     instead of attempting a doomed automatic popup. The click on THAT button
+//     is what makes the resulting loginPopup() succeed on the first try.
+// ---------------------------------------------------------------------------
+async function initApp(){
+  const el = document.getElementById('loadingMsg');
+  await ensureMsalInit();
+  const hasSession = msalInstance.getAllAccounts().length > 0;
+
+  if(hasSession){
+    loadLive();
+    return;
+  }
+
+  if(el){
+    el.innerHTML = 'Sign in to load live data from Power BI.<br><br>' +
+      '<button onclick="loadLive()" style="font-size:16px;padding:10px 24px;cursor:pointer">Sign In</button>';
   }
 }
