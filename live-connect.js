@@ -94,11 +94,16 @@ async function getToken(){
 // Graph token -- for writing MMR leader input to the SharePoint Excel log.
 // Reuses the same msalInstance/ensureMsalInit as getToken() above; just a
 // different scope. First call may show a one-time consent popup for
-// Files.ReadWrite even if the user already consented to the Power BI scope.
+// Files.ReadWrite.All even if the user already consented to the Power BI
+// scope. NOTE: must exactly match the permission granted admin consent in
+// Entra ID -- "Files.ReadWrite" and "Files.ReadWrite.All" are DIFFERENT,
+// distinct Graph permissions; requesting one when only the other was
+// consented fails silently from the user's perspective (mmrSave() shows
+// "Saved locally only").
 // ---------------------------------------------------------------------------
 async function getGraphToken(){
   await ensureMsalInit();
-  const request = { scopes: ["Files.ReadWrite"] };
+  const request = { scopes: ["Files.ReadWrite.All"] };
   const accounts = msalInstance.getAllAccounts();
   if(accounts.length > 0){
     try{
