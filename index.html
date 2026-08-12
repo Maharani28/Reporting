@@ -560,7 +560,7 @@ function parseWorkbook(wb){
   if(today.getFullYear()===dataMaxYear){CUR_MONTH_IDX=today.getMonth();}
   else{const yr=cli.filter(r=>r.year===dataMaxYear);const tot=yr.reduce((a,r)=>a+r.won,0);let last=0;
     for(let i=0;i<12;i++){const mv=yr.filter(r=>MONTHS.indexOf(r.month)===i).reduce((a,r)=>a+r.won,0);if(mv>=0.02*tot)last=i;}
-    CUR_MONTH_IDX=last||5;}
+    CUR_MONTH_IDX=last||today.getMonth();}
 
   const prodMap={};
   prodRaw.forEach(r=>{const yr=num(r['Year']);if(yr!==CUR_YEAR)return;const goal=num(r['Producer Goal']);const name=r['Producer'];if(!name)return;
@@ -948,7 +948,7 @@ function mmrGather(){
     if(i.length>=4)prod.push({producer:i[0].value,gap:i[1].value,plan:i[2].value,outcome:i[3].value});
   });
   const wins=[];document.querySelectorAll('#mmrWinBody tr').forEach(tr=>{
-    const i=tr.querySelectorAll('input,select');
+    const i=tr.querySelectorAll('input,select,textarea');
     if(i.length>=6)wins.push({producer:i[0].value,deal:i[1].value,teeup:i[2].value,advance:i[3].value,client:i[4].value,team:i[5].value});
   });
   const st={

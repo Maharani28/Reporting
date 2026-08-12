@@ -76,18 +76,43 @@ async function ensureMsalInit(){
   _msalInitialized = true;
 }
 
+// ---------------------------------------------------------------------------
+// Token acquisition -- guarded against concurrent calls.
+//
+// WHY THE GUARD: loadLive() fires 6 DAX queries at once via Promise.all(),
+// and each one calls getToken() independently. On a fresh sign-in with no
+// cached session, all 6 would otherwise try to open an MSAL popup at nearly
+// the same instant. MSAL only permits ONE interactive login in flight at a
+// time -- the first call wins and shows the real popup, but the other 5
+// immediately fail with "interaction_in_progress", and since Promise.all
+// rejects on the first failure, the whole load appears to fail even though
+// the actual login succeeded underneath (which is why clicking Retry right
+// after always worked -- a session was already cached by then).
+//
+// FIX: concurrent callers share the SAME in-flight request instead of each
+// starting their own competing popup attempt.
+// ---------------------------------------------------------------------------
+let _tokenPromise = null;
 async function getToken(){
-  await ensureMsalInit();
-  const request = { scopes: ["https://analysis.windows.net/powerbi/api/Dataset.Read.All"] };
-  const accounts = msalInstance.getAllAccounts();
-  if(accounts.length > 0){
-    try{
-      const res = await msalInstance.acquireTokenSilent({ ...request, account: accounts[0] });
-      return res.accessToken;
-    }catch(e){ /* fall through to interactive */ }
+  if(_tokenPromise) return _tokenPromise;
+  _tokenPromise = (async () => {
+    await ensureMsalInit();
+    const request = { scopes: ["https://analysis.windows.net/powerbi/api/Dataset.Read.All"] };
+    const accounts = msalInstance.getAllAccounts();
+    if(accounts.length > 0){
+      try{
+        const res = await msalInstance.acquireTokenSilent({ ...request, account: accounts[0] });
+        return res.accessToken;
+      }catch(e){ /* fall through to interactive */ }
+    }
+    const res = await msalInstance.loginPopup(request);
+    return res.accessToken;
+  })();
+  try{
+    return await _tokenPromise;
+  }finally{
+    _tokenPromise = null; // clear once settled so a later (non-concurrent) call can re-trigger if the session expires
   }
-  const res = await msalInstance.loginPopup(request);
-  return res.accessToken;
 }
 
 // ---------------------------------------------------------------------------
@@ -99,20 +124,32 @@ async function getToken(){
 // Entra ID -- "Files.ReadWrite" and "Files.ReadWrite.All" are DIFFERENT,
 // distinct Graph permissions; requesting one when only the other was
 // consented fails silently from the user's perspective (mmrSave() shows
-// "Saved locally only").
+// "Saved locally only"). Same concurrent-call guard as getToken() above --
+// not currently needed here since saveMMRToSharePoint() awaits its 4
+// graphAddRows() calls sequentially, but hardened the same way in case that
+// ever changes.
 // ---------------------------------------------------------------------------
+let _graphTokenPromise = null;
 async function getGraphToken(){
-  await ensureMsalInit();
-  const request = { scopes: ["Files.ReadWrite.All"] };
-  const accounts = msalInstance.getAllAccounts();
-  if(accounts.length > 0){
-    try{
-      const res = await msalInstance.acquireTokenSilent({ ...request, account: accounts[0] });
-      return res.accessToken;
-    }catch(e){ /* fall through to interactive */ }
+  if(_graphTokenPromise) return _graphTokenPromise;
+  _graphTokenPromise = (async () => {
+    await ensureMsalInit();
+    const request = { scopes: ["Files.ReadWrite.All"] };
+    const accounts = msalInstance.getAllAccounts();
+    if(accounts.length > 0){
+      try{
+        const res = await msalInstance.acquireTokenSilent({ ...request, account: accounts[0] });
+        return res.accessToken;
+      }catch(e){ /* fall through to interactive */ }
+    }
+    const res = await msalInstance.loginPopup(request);
+    return res.accessToken;
+  })();
+  try{
+    return await _graphTokenPromise;
+  }finally{
+    _graphTokenPromise = null;
   }
-  const res = await msalInstance.loginPopup(request);
-  return res.accessToken;
 }
 
 // ---------------------------------------------------------------------------
@@ -142,16 +179,26 @@ async function graphAddRows(tableName, rowsArray){
   return res.json();
 }
 
+// Returns the signed-in user's email (verified via MSAL/Entra ID), NOT the
+// free-text "Market Leader" field a user types into the form -- this is the
+// actual authenticated identity of whoever clicked Save.
+async function currentUserEmail(){
+  await ensureMsalInit();
+  const acc = msalInstance.getAllAccounts()[0];
+  return acc ? acc.username : "unknown";
+}
+
 async function saveMMRToSharePoint(state){
   const saveId = `${state.market||'ALL'}::${MONTHS[CUR_MONTH_IDX]}${CUR_YEAR}::${Date.now()}`;
   const savedAtUTC = new Date().toISOString();
+  const savedByUser = await currentUserEmail();
   // Must match the on-screen section headers exactly: "This Month" / "Quarter End" / "Next Month"
   const HZ_LABEL = { dThis: "This Month", dQtr: "Quarter End", dNext: "Next Month" };
 
   // AdditionalConfidentToClose_Calculated is NOT a user input -- it's mmrComputeAddl(state),
   // already computed inside mmrGather(). Stored here as a point-in-time snapshot.
   await graphAddRows("MMR_Summary", [[
-    saveId, savedAtUTC, state.market, MONTHS[CUR_MONTH_IDX], CUR_YEAR,
+    saveId, savedAtUTC, savedByUser, state.market, MONTHS[CUR_MONTH_IDX], CUR_YEAR,
     state.leader, state.commitHz, state.addl, state.nextOpps
   ]]);
 
@@ -159,19 +206,19 @@ async function saveMMRToSharePoint(state){
   ["dThis","dQtr","dNext"].forEach(hz => {
     (state[hz]||[]).forEach(d => {
       if(!d.deal && !d.amt) return; // skip empty rows
-      dealRows.push([saveId, HZ_LABEL[hz], d.deal, d.producer, d.amt, d.close, d.conf, d.notes]);
+      dealRows.push([saveId, savedAtUTC, savedByUser, HZ_LABEL[hz], d.deal, d.producer, d.amt, d.close, d.conf, d.notes]);
     });
   });
   if(dealRows.length) await graphAddRows("MMR_Deals", dealRows);
 
   const prodRows = (state.prod||[])
     .filter(p => p.producer)
-    .map(p => [saveId, p.producer, p.gap, p.plan, p.outcome]);
+    .map(p => [saveId, savedAtUTC, savedByUser, p.producer, p.gap, p.plan, p.outcome]);
   if(prodRows.length) await graphAddRows("MMR_ProducersBehindPace", prodRows);
 
   const winRows = (state.wins||[])
     .filter(w => w.producer)
-    .map(w => [saveId, w.producer, w.deal, w.teeup, w.advance, w.client, w.team]);
+    .map(w => [saveId, savedAtUTC, savedByUser, w.producer, w.deal, w.teeup, w.advance, w.client, w.team]);
   if(winRows.length) await graphAddRows("MMR_RecentWins", winRows);
 }
 
