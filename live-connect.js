@@ -299,15 +299,21 @@ const DAX_QUERIES = {
   // 6-year rolling window (current year and 5 prior) so the seasonal pacing
   // curve on Goal Trending has real history, not the linear fallback.
   //
-  // Also pulls 'Dim Broker'[PL Region Hierarchy - Market] alongside the
-  // normal Geographic Market column. Geographic Market is occasionally blank
-  // on individual won-revenue rows (the lookup missed them); the broader
-  // hierarchy field almost always still has something ("Florida",
-  // "Tennessee + Carolinas", etc). fillBlankMarketPractice() below uses it
-  // -- together with each producer's own transaction history -- to resolve
-  // those rows to a real submarket instead of letting that revenue vanish
-  // from every market/practice breakdown while still counting in the region
-  // total.
+  // Also pulls 'Dim Broker'[Market] alongside the normal Geographic Market
+  // column. Geographic Market is occasionally blank on individual won-revenue
+  // rows (the lookup missed them); the broader, 4-way combined Market column
+  // almost always still has something ("Florida", "Tennessee + Carolinas",
+  // etc). fillBlankMarketPractice() below uses it -- together with each
+  // producer's own transaction history -- to resolve those rows to a real
+  // submarket instead of letting that revenue vanish from every market/practice
+  // breakdown while still counting in the region total.
+  //
+  // NOTE: this is NOT 'Dim Broker'[PL Region Hierarchy - Market]. That looked
+  // like a column but is actually the second level of Dim Broker's "PL Region
+  // Hierarchy" user hierarchy (PL Region -> Market -> PL Broker) -- hierarchy
+  // levels are a report/visual-layer construct, not a queryable DAX column,
+  // and referencing one by that dashed name 400s with "Column ... cannot be
+  // found". The level's real data is just the plain Market column below.
   clientLevel: `
     EVALUATE
     SELECTCOLUMNS(
@@ -315,7 +321,7 @@ const DAX_QUERIES = {
         SUMMARIZECOLUMNS(
           DimProducer[Producer], DimClientProspect[Company Name], DimClientProspect[Company Type],
           DimClientProspect[Size], DimClientProspect[Industry Group], 'Dim Broker'[Geographic Market],
-          'Dim Broker'[PL Region Hierarchy - Market],
+          'Dim Broker'[Market],
           FactNetGrowthKPIs[Business Practice], 'Date'[Month Name Short], 'Date'[Year], FactNetGrowthKPIs[Opportunity ID],
           ${REGION_FILTER}, ${BROKER_FILTER}, ${PRACTICE_FILTER},
           FILTER(ALL('Date'[Year]), 'Date'[Year] >= YEAR(TODAY())-5 && 'Date'[Year] <= YEAR(TODAY())),
@@ -326,7 +332,7 @@ const DAX_QUERIES = {
         [Won] <> 0
       ),
       "Producer",[Producer], "Company",[Company Name], "CoType",[Company Type], "Size",[Size],
-      "Industry",[Industry Group], "Market",[Geographic Market], "HierMkt",[PL Region Hierarchy - Market],
+      "Industry",[Industry Group], "Market",[Geographic Market], "HierMkt",[Market],
       "Practice",[Business Practice],
       "Month",[Month Name Short], "Year",[Year], "OppID",[Opportunity ID],
       "Won",[Won], "NonRec",[NonRec], "Conv",[Conv]

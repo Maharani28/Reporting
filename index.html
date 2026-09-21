@@ -558,7 +558,9 @@ const fmt=n=>'$'+Math.round(n||0).toLocaleString();
 const fmtK=n=>{n=n||0;return n>=1e6?'$'+(n/1e6).toFixed(1)+'M':n>=1e3?'$'+(n/1e3).toFixed(0)+'K':'$'+Math.round(n);};
 const pct=n=>(n*100).toFixed(0)+'%';
 const num=v=>{let x=parseFloat(v);return isNaN(x)?0:x;};
-let CUR_YEAR=2026, CUR_MONTH_IDX=5;
+// placeholder only -- overwritten by computeSeasonal() as soon as real data loads,
+// but derived from the real clock rather than hardcoded so nothing here is ever stale
+let CUR_YEAR=new Date().getFullYear(), CUR_MONTH_IDX=new Date().getMonth();
 function destroyChart(id){if(CHARTS[id]){CHARTS[id].destroy();delete CHARTS[id];}}
 
 function parseWorkbook(wb){
@@ -649,12 +651,25 @@ function parseWorkbook(wb){
   })();
 
   const years=[...new Set(cli.map(r=>r.year))].sort();
-  const dataMaxYear=Math.max(...years); CUR_YEAR=dataMaxYear;
+  const dataMaxYear=Math.max(...years);
   const today=new Date();
-  if(today.getFullYear()===dataMaxYear){CUR_MONTH_IDX=today.getMonth();}
-  else{const yr=cli.filter(r=>r.year===dataMaxYear);const tot=yr.reduce((a,r)=>a+r.won,0);let last=0;
+  // Always default to the real current month when the dashboard opens, as
+  // long as the current year has any data at all -- don't let a partially-
+  // refreshed current month, or any other heuristic, silently roll the
+  // default back to an earlier month. "As of" reporting is supposed to show
+  // partial current-month data; that's the point of the As-of Month picker.
+  // Only fall back to "last month with real revenue" for a year that isn't
+  // the real current year at all (e.g. the model hasn't been refreshed into
+  // the new year yet).
+  if(years.includes(today.getFullYear())){
+    CUR_YEAR=today.getFullYear();
+    CUR_MONTH_IDX=today.getMonth();
+  }else{
+    CUR_YEAR=dataMaxYear;
+    const yr=cli.filter(r=>r.year===dataMaxYear);const tot=yr.reduce((a,r)=>a+r.won,0);let last=0;
     for(let i=0;i<12;i++){const mv=yr.filter(r=>MONTHS.indexOf(r.month)===i).reduce((a,r)=>a+r.won,0);if(mv>=0.02*tot)last=i;}
-    CUR_MONTH_IDX=last||today.getMonth();}
+    CUR_MONTH_IDX=last||today.getMonth();
+  }
 
   const prodMap={};
   prodRaw.forEach(r=>{const yr=num(r['Year']);if(yr!==CUR_YEAR)return;const goal=num(r['Producer Goal']);const name=r['Producer'];if(!name)return;
