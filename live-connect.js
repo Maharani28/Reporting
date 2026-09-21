@@ -192,23 +192,48 @@ async function saveMMRToSharePoint(state){
   const saveId = `${state.market||'ALL'}::${MONTHS[CUR_MONTH_IDX]}${CUR_YEAR}::${Date.now()}`;
   const savedAtUTC = new Date().toISOString();
   const savedByUser = await currentUserEmail();
-  // Must match the on-screen section headers exactly: "This Month" / "Quarter End" / "Next Month"
-  const HZ_LABEL = { dThis: "This Month", dQtr: "Quarter End", dNext: "Next Month" };
+
+  // Redesigned MMR (single flat deal list with a Confidence tier per deal,
+  // instead of three separate This-Month/Quarter-End/Next-Month tables) --
+  // SAME 4 SharePoint tables, SAME columns, in the SAME order as before.
+  // The one thing that changes is how the "Horizon" column on MMR_Deals gets
+  // its value: it used to come from which of the 3 on-screen tables a row
+  // was typed into; now every deal lives in one list and Horizon is derived
+  // from that deal's own Expected Close date via mmrBucketFor() (index.html),
+  // duplicated here in the exact same 3 labels ("This Month" / "Quarter End"
+  // / "Next Month") plus "Later" for anything beyond next month -- a 4th
+  // free-text value, not a schema change, since MMR_Deals.Horizon is a plain
+  // text column.
+  //
+  // CommitHorizon on MMR_Summary was a leader-chosen "which window am I
+  // committing to" selector; the redesign has no such choice (Section 1 just
+  // follows the Forecast tab's own Focus Period), so this column is now
+  // always written as "auto" -- kept only so historical rows in the log stay
+  // self-explanatory rather than silently changing meaning underneath a
+  // reader who doesn't know a redesign happened.
+  const mmrHorizonFor = (closeStr) => {
+    const parts = (closeStr||'').trim().split(/\s+/);
+    const mi = MONTHS.indexOf(parts[0]);
+    const year = parseInt(parts[1], 10);
+    if(mi < 0 || isNaN(year)) return "Later";
+    const ni = (CUR_MONTH_IDX+1)%12, ny = CUR_MONTH_IDX===11 ? CUR_YEAR+1 : CUR_YEAR;
+    const qEnd = (Math.floor(CUR_MONTH_IDX/3)*3)+2;
+    if(mi===CUR_MONTH_IDX && year===CUR_YEAR) return "This Month";
+    if(year===CUR_YEAR && mi>CUR_MONTH_IDX && mi<=qEnd) return "Quarter End";
+    if(mi===ni && year===ny) return "Next Month";
+    return "Later";
+  };
 
   // AdditionalConfidentToClose_Calculated is NOT a user input -- it's mmrComputeAddl(state),
   // already computed inside mmrGather(). Stored here as a point-in-time snapshot.
   await graphAddRows("MMR_Summary", [[
     saveId, savedAtUTC, savedByUser, state.market, MONTHS[CUR_MONTH_IDX], CUR_YEAR,
-    state.leader, state.commitHz, state.addl, state.nextOpps
+    state.leader, "auto", state.addl, state.nextOpps
   ]]);
 
-  const dealRows = [];
-  ["dThis","dQtr","dNext"].forEach(hz => {
-    (state[hz]||[]).forEach(d => {
-      if(!d.deal && !d.amt) return; // skip empty rows
-      dealRows.push([saveId, savedAtUTC, savedByUser, HZ_LABEL[hz], d.deal, d.producer, d.amt, d.close, d.conf, d.notes]);
-    });
-  });
+  const dealRows = (state.deals||[])
+    .filter(d => d.deal || d.amt)   // skip empty rows
+    .map(d => [saveId, savedAtUTC, savedByUser, mmrHorizonFor(d.close), d.deal, d.producer, d.amt, d.close, d.conf, d.notes]);
   if(dealRows.length) await graphAddRows("MMR_Deals", dealRows);
 
   const prodRows = (state.prod||[])
@@ -273,6 +298,16 @@ const DAX_QUERIES = {
 
   // 6-year rolling window (current year and 5 prior) so the seasonal pacing
   // curve on Goal Trending has real history, not the linear fallback.
+  //
+  // Also pulls 'Dim Broker'[PL Region Hierarchy - Market] alongside the
+  // normal Geographic Market column. Geographic Market is occasionally blank
+  // on individual won-revenue rows (the lookup missed them); the broader
+  // hierarchy field almost always still has something ("Florida",
+  // "Tennessee + Carolinas", etc). fillBlankMarketPractice() below uses it
+  // -- together with each producer's own transaction history -- to resolve
+  // those rows to a real submarket instead of letting that revenue vanish
+  // from every market/practice breakdown while still counting in the region
+  // total.
   clientLevel: `
     EVALUATE
     SELECTCOLUMNS(
@@ -280,6 +315,7 @@ const DAX_QUERIES = {
         SUMMARIZECOLUMNS(
           DimProducer[Producer], DimClientProspect[Company Name], DimClientProspect[Company Type],
           DimClientProspect[Size], DimClientProspect[Industry Group], 'Dim Broker'[Geographic Market],
+          'Dim Broker'[PL Region Hierarchy - Market],
           FactNetGrowthKPIs[Business Practice], 'Date'[Month Name Short], 'Date'[Year], FactNetGrowthKPIs[Opportunity ID],
           ${REGION_FILTER}, ${BROKER_FILTER}, ${PRACTICE_FILTER},
           FILTER(ALL('Date'[Year]), 'Date'[Year] >= YEAR(TODAY())-5 && 'Date'[Year] <= YEAR(TODAY())),
@@ -290,7 +326,8 @@ const DAX_QUERIES = {
         [Won] <> 0
       ),
       "Producer",[Producer], "Company",[Company Name], "CoType",[Company Type], "Size",[Size],
-      "Industry",[Industry Group], "Market",[Geographic Market], "Practice",[Business Practice],
+      "Industry",[Industry Group], "Market",[Geographic Market], "HierMkt",[PL Region Hierarchy - Market],
+      "Practice",[Business Practice],
       "Month",[Month Name Short], "Year",[Year], "OppID",[Opportunity ID],
       "Won",[Won], "NonRec",[NonRec], "Conv",[Conv]
     )
@@ -302,14 +339,19 @@ const DAX_QUERIES = {
   // no real relationship between DimProducer and Dim Broker, and doing so
   // fans out to all 6 markets per producer. Market is derived later, in JS,
   // via majority vote across each producer's own client-level rows.
-  producerGoals: `
+  //
+  // Now a function of `yearExpr` (either the DAX literal "YEAR(TODAY())" on
+  // first load, or an explicit year number once the user picks one from the
+  // global Year selector) so the whole dashboard can re-query a prior year
+  // without ever going back to a spreadsheet upload.
+  producerGoals: (yearExpr) => `
     EVALUATE
     FILTER(
       SELECTCOLUMNS(
         SUMMARIZECOLUMNS(
           DimProducer[Producer], DimProducer[Type], DimProducer[Market], DimProducer[BR Sales Leader],
           FILTER(VALUES(FactOwner[Region]), FactOwner[Region]="South"),
-          FILTER(VALUES(FactOwner[Year]), FactOwner[Year] = FORMAT(YEAR(TODAY()), "0")),
+          FILTER(VALUES(FactOwner[Year]), FactOwner[Year] = FORMAT(${yearExpr}, "0")),
           FILTER(VALUES(FactOwner[Sub-Vertical]), FactOwner[Sub-Vertical] IN {"Employee Benefits","HRC","P&C"}),
           "Goal", AVERAGE(FactOwner[Producer Goal])
         ),
@@ -319,16 +361,17 @@ const DAX_QUERIES = {
     )
   `,
 
-  // Current-year producer performance: Won/NonRec/Conv (row-level fix from
-  // this session), 12-month pipeline, delinquent pipeline, the REAL
-  // Total Contribution Revenue measure, and Meetings from the Activity table.
-  producerPerf: `
+  // Producer performance for `yearExpr` (see producerGoals comment above):
+  // Won/NonRec/Conv (row-level fix from this session), 12-month pipeline,
+  // delinquent pipeline, the REAL Total Contribution Revenue measure, and
+  // Meetings from the Activity table.
+  producerPerf: (yearExpr) => `
     EVALUATE
     SELECTCOLUMNS(
       SUMMARIZECOLUMNS(
         DimProducer[Producer],
         ${REGION_FILTER}, ${BROKER_FILTER},
-        FILTER(VALUES('Date'[Year]), 'Date'[Year] = YEAR(TODAY())),
+        FILTER(VALUES('Date'[Year]), 'Date'[Year] = ${yearExpr}),
         ${PRACTICE_FILTER},
         "Won", [Won_Revenue],
         "NonRec", [NonRecurring_Won_Revenue],
@@ -364,7 +407,7 @@ const DAX_QUERIES = {
     )
   `,
 
-  convergence: `
+  convergence: (yearExpr) => `
     EVALUATE
     SELECTCOLUMNS(
       FILTER(
@@ -372,7 +415,7 @@ const DAX_QUERIES = {
           DimClientProspect[Company Name], 'Date'[Month Name Short], 'Date'[Year], 'Dim Broker'[Geographic Market],
           DimOpportunity[Referral Consultant], DimOpportunity[Primary Producer],
           ${REGION_FILTER}, ${BROKER_FILTER},
-          FILTER(VALUES('Date'[Year]), 'Date'[Year] = YEAR(TODAY())),
+          FILTER(VALUES('Date'[Year]), 'Date'[Year] = ${yearExpr}),
           ${PRACTICE_FILTER},
           "Rev", ${CONV_SPLIT_EXPR}
         ),
@@ -413,6 +456,60 @@ function majorityVote(rows, key, producerName){
   return best;
 }
 
+// ---------------------------------------------------------------------------
+// Blank Market/Practice fill-in (see the comment above the clientLevel call
+// site in loadLive() for why this exists). Mutates `cli` rows in place.
+// ---------------------------------------------------------------------------
+function fillBlankMarketPractice(cli, allProducers, dominantMarket, dominantPractice){
+  const blanks = cli.filter(r => !r.market || !r.practice);
+  if(!blanks.length) return;
+
+  const realMkts = SOUTH_MARKETS;
+
+  // per-producer tally of their own real (non-blank) market rows, weighted
+  // by revenue size, so the vote favors where their business actually sits
+  const mkTally = {};
+  cli.forEach(r => {
+    if(!r.producer || !r.market) return;
+    const w = Math.abs(r.won || 0) + Math.abs(r.nonrec || 0) + 1;
+    (mkTally[r.producer] = mkTally[r.producer] || {})[r.market] =
+      (mkTally[r.producer][r.market] || 0) + w;
+  });
+  const topMkt = own => own ? Object.keys(own).sort((a,b) => own[b]-own[a])[0] || '' : '';
+
+  const resolveMkt = r => {
+    const raw = String(r.hierMkt || '').trim();
+    if(realMkts.indexOf(raw) >= 0) return raw;               // already a real single market
+    const parts = raw.split('+').map(x => x.trim()).filter(Boolean); // e.g. "Tennessee + Carolinas"
+    const cands = raw ? realMkts.filter(m => m === raw || m.indexOf(raw) >= 0 ||
+      parts.some(p => m === p || m.indexOf(p) >= 0)) : [];
+    const own = mkTally[r.producer] || {};
+    if(cands.length){
+      let best = '', bv = -1;
+      cands.forEach(m => { const v = own[m] || 0; if(v > bv){ bv = v; best = m; } });
+      if(best) return best;
+    }
+    return topMkt(own) || dominantMarket[r.producer] || '';
+  };
+
+  let fixedMarket = 0, fixedPractice = 0, fixedRev = 0;
+  blanks.forEach(r => {
+    if(!r.market){
+      const m = resolveMkt(r);
+      if(m){ r.market = m; r.marketFilled = true; fixedMarket++; if(r.won) fixedRev += r.won; }
+    }
+    if(!r.practice){
+      const raw = dominantPractice[r.producer];
+      const p = raw ? (BUSINESS_TO_PRACTICE[raw] || raw) : '';
+      if(p){ r.practice = p; r.practiceFilled = true; fixedPractice++; }
+    }
+  });
+  if(fixedMarket || fixedPractice){
+    console.info(`[data-fill] resolved market on ${fixedMarket} row(s) (~${fmt(fixedRev)} won) ` +
+      `and practice on ${fixedPractice} row(s) that arrived blank from the model.`);
+  }
+}
+
 function splitGoal(combinedGoal, subA, subB, wonBySubmarket){
   const wa = wonBySubmarket[subA] || 0;
   const wb = wonBySubmarket[subB] || 0;
@@ -426,17 +523,26 @@ function splitGoal(combinedGoal, subA, subB, wonBySubmarket){
 // DATA shape parseWorkbook() used to produce, then calls the dashboard's own
 // computeSeasonal() + boot() so every render function works unmodified.
 // ---------------------------------------------------------------------------
-async function loadLive(){
+async function loadLive(selectedYear){
   const el = document.getElementById('loadingMsg');
   if(el) el.innerHTML = 'Signing in and querying the live model&hellip;';
+  const gy = document.getElementById('gYear');
+  if(gy) gy.disabled = true;
+
+  // First load (no year picked yet) still uses YEAR(TODAY()) so it always
+  // opens on the current year with zero configuration. Once the user picks
+  // a year from the global bar, that literal year is baked into the same
+  // three DAX queries instead -- Plan, producer goals and actuals all stay
+  // pinned to that one year, everywhere on the dashboard.
+  const yearExpr = selectedYear ? String(selectedYear) : 'YEAR(TODAY())';
 
   try{
     const [clientRowsRaw, goalRows, perfRows, pipeRowsRaw, convRowsRaw, goalTrackerRows] = await Promise.all([
       runDax(DAX_QUERIES.clientLevel),
-      runDax(DAX_QUERIES.producerGoals),
-      runDax(DAX_QUERIES.producerPerf),
+      runDax(DAX_QUERIES.producerGoals(yearExpr)),
+      runDax(DAX_QUERIES.producerPerf(yearExpr)),
       runDax(DAX_QUERIES.pipeline),
-      runDax(DAX_QUERIES.convergence),
+      runDax(DAX_QUERIES.convergence(yearExpr)),
       runDax(DAX_QUERIES.convergenceGoalTracker)
     ]);
 
@@ -449,7 +555,7 @@ async function loadLive(){
 
     // --- Client level Data -> DATA.cli ---
     const cli = clientRowsRaw.map(r => ({
-      producer: r.Producer, market: r.Market,
+      producer: r.Producer, market: r.Market, hierMkt: r.HierMkt,
       practice: BUSINESS_TO_PRACTICE[r.Practice] || r.Practice,
       region: 'South', company: r.Company, type: r.CoType, size: r.Size,
       industry: r.Industry, oppLink: r.OppID ? (D365_BASE + r.OppID) : '',
@@ -467,6 +573,20 @@ async function loadLive(){
       dominantMarket[name] = majorityVote(clientRowsRaw, 'Market', name);
       dominantPractice[name] = majorityVote(clientRowsRaw, 'Practice', name);
     });
+
+    // --- fill blank Market/Practice on individual won-revenue rows ---
+    // A handful of closed deals arrive with 'Dim Broker'[Geographic Market]
+    // (and occasionally Business Practice) empty on the row itself, even
+    // though the producer, company and revenue are fine. Left alone, that
+    // revenue counts in the region total but is invisible in every
+    // market/practice breakdown, so the columns stop adding up to the
+    // region total shown elsewhere. Nothing is invented here: each blank
+    // row is resolved using (a) the broader PL Region Hierarchy - Market
+    // label carried on that same row, matched against the producer's own
+    // real submarket history when the hierarchy label is broad (e.g.
+    // "Florida" or "Tennessee + Carolinas"), and (b) that producer's own
+    // majority-vote market/practice as the fallback.
+    fillBlankMarketPractice(cli, allProducers, dominantMarket, dominantPractice);
 
     // --- Producer Data -> DATA.producers ---
     const perfByName = {};
@@ -539,12 +659,23 @@ async function loadLive(){
     // --- assemble DATA exactly as parseWorkbook() used to, then reuse the
     //     dashboard's own seasonal-curve + render pipeline unmodified ---
     DATA = { cli, producers, pipe, years, planByMarket, planByPractice, convGoalByMarket, convByMarket, convByProducer, convByMonth };
-    CUR_YEAR = curYear;
+    CUR_YEAR = selectedYear || curYear;
     computeSeasonal();
     boot();
 
+    if(gy){
+      // clientLevel's own 6-year rolling window is the full list of years
+      // the model actually has data for; re-populate every load in case
+      // that window has shifted (e.g. a new calendar year rolling in).
+      gy.innerHTML = years.slice().sort((a,b)=>b-a)
+        .map(y => `<option value="${y}" ${y===CUR_YEAR?'selected':''}>${y}</option>`).join('');
+      gy.disabled = false;
+      gy.onchange = () => loadLive(+gy.value);
+    }
+
   }catch(err){
     console.error(err);
+    if(gy) gy.disabled = false;
     if(el) el.innerHTML = `Live query failed: ${err.message}. <button onclick="loadLive()">Retry</button>`;
   }
 }

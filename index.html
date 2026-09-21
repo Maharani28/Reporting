@@ -44,6 +44,16 @@ header{background:var(--navy);color:#fff;padding:18px 28px;display:flex;align-it
 .mmr-hz-qtr{background:var(--green);}
 .mmr-hz-next{background:var(--orange);}
 .mmr-addrow{margin:4px 0 8px;padding:7px 14px;font-size:12px;}
+.mmr-auto-tag{display:inline-block;background:var(--lgray);color:#4a4f52;font-size:9px;font-weight:900;letter-spacing:.6px;text-transform:uppercase;padding:1px 5px;margin-left:5px;vertical-align:1px;}
+.mmr-conf-key{background:#fffaf0;border-left:3px solid var(--yellow);padding:9px 12px;line-height:2;}
+.mmr-conf-key .mmr-tag{margin-left:8px;}
+.mmr-tag{display:inline-block;padding:1px 8px;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.4px;color:#fff;}
+.mmr-tag.mmr-h{background:var(--green);}
+.mmr-tag.mmr-m{background:var(--yellow);color:var(--dgray);}
+.mmr-tag.mmr-l{background:var(--lgray);color:var(--dgray);}
+select.mmr-conf-H{border-color:var(--green)!important;font-weight:800;}
+select.mmr-conf-M{border-color:var(--yellow)!important;font-weight:800;}
+select.mmr-conf-L{border-color:var(--lgray)!important;color:#6b7073;}
 .mmr-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:18px;padding-top:14px;border-top:1px solid var(--lgray);}
 .mmr-savedmsg{color:var(--green);font-weight:800;font-size:13px;}
 .mmr-delrow{background:none;border:none;color:#c0392b;cursor:pointer;font-weight:900;font-size:15px;line-height:1;}
@@ -92,8 +102,64 @@ tr:hover td{background:#f7fafb;}
 .insight b{color:var(--navy);}
 .insight.alert{border-left-color:var(--orange);}.insight.good{border-left-color:var(--green);}
 .muted{color:#6b7073;font-size:12px;}
+/* ---- global filter bar ---- */
+.gbar{position:sticky;top:0;z-index:60;display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px;
+ background:#fff;border-bottom:2px solid var(--lgray);padding:12px 26px 12px;
+ box-shadow:0 2px 6px rgba(0,0,0,.06);}
+.gbar .gfg{display:flex;flex-direction:column;gap:4px;}
+.gbar .gfg label{font-size:9.5px;font-weight:900;letter-spacing:.9px;text-transform:uppercase;color:#6b7073;}
+.gbar .gfg select{padding:7px 10px;border:1.5px solid var(--lgray);background:#fff;font-family:inherit;
+ font-size:13px;font-weight:700;color:var(--navy);min-width:132px;}
+.gbar .gfg select:focus{outline:none;border-color:var(--blue);}
+.gbar .gspacer{flex:1 1 auto;}
+.gbar .gnote{font-size:11.5px;color:#6b7073;line-height:1.5;max-width:430px;align-self:center;}
+.gbar .gnote b{color:var(--navy);}
+.gbar .grev{border-left:3px solid var(--orange);padding-left:14px;}
+.gbar .grev select{border-color:var(--orange);}
+@media(max-width:900px){.gbar{padding:10px 14px;gap:12px}.gbar .gnote{display:none}}
+.fc-legend{background:#f4f6f6;border-left:4px solid var(--blue);padding:12px 16px;font-size:13px;line-height:1.65;color:var(--dgray);margin:0 0 16px;}
+.fc-chip{display:inline-block;padding:1px 8px;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.4px;margin:0 2px;}
+.fc-chip-a{background:var(--green);color:#fff;}
+.fc-chip-f{background:var(--blue);color:#fff;}
+.fc-chip-p{background:var(--navy);color:#fff;}
 .section-head{font-size:18px;font-weight:900;color:var(--navy);margin:6px 0 16px;display:flex;align-items:center;gap:10px;}
 .section-head .accent{width:34px;height:5px;background:linear-gradient(90deg,var(--orange),var(--yellow));display:inline-block;}
+.segwrap{display:flex;gap:0;border:1.5px solid var(--lgray);background:#fff;}
+.segwrap .segopt{display:flex;align-items:center;gap:6px;padding:8px 11px;font-size:12.5px;font-weight:600;color:var(--navy);cursor:pointer;border-right:1px solid var(--lgray);white-space:nowrap;text-transform:none;letter-spacing:0;}
+.segwrap .segopt:last-child{border-right:none;}
+.segwrap .segopt input{margin:0;min-width:0;width:13px;height:13px;accent-color:#f47d20;cursor:pointer;padding:0;border:none;}
+.segwrap .seglink{display:flex;align-items:center;gap:8px;padding:8px 10px;border-left:1px solid var(--lgray);background:#f7f9fa;}
+.segwrap .seglink a{font-size:11px;font-weight:800;color:var(--blue);text-decoration:none;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;}
+.segwrap .seglink a:hover{color:var(--orange);text-decoration:underline;}
+.segwrap .segopt.on{background:rgba(244,125,32,.12);color:#25282a;}
+/* progress cell: the track and its number travel together as one right-aligned unit,
+   so there is no wide gap that makes the % look like it belongs to the next column. */
+.pbar{display:inline-flex;align-items:center;justify-content:flex-end;gap:7px;white-space:nowrap;max-width:100%;}
+.pbar-track{position:relative;flex:0 0 68px;height:14px;background:var(--lgray);}
+.pbar-mark{position:absolute;top:-2px;width:2px;height:18px;background:var(--navy);}
+.pbar-fill{position:absolute;left:0;top:0;height:100%;}
+.pbar-num{flex:0 0 32px;text-align:right;font-size:11.5px;font-weight:800;color:var(--navy);}
+.pcol{width:126px;min-width:126px;text-align:right;}
+.pace-wrap table th{background:var(--navy);color:#fff;font-size:11px;text-transform:uppercase;
+  letter-spacing:.6px;font-weight:800;padding:10px;border-bottom:none;white-space:nowrap;}
+.pace-wrap table th:hover{color:var(--yellow);}
+.pace-wrap table tfoot .fc-tot td{background:#eef4f6;}
+.fc-chip-g{background:var(--orange);color:#fff;}
+.fc-tbl{width:100%;border-collapse:collapse;font-size:13px;}
+.fc-tbl th{background:#f4f6f6;color:var(--navy);font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:800;padding:8px 10px;text-align:left;border-bottom:2px solid var(--lgray);position:static;cursor:default;white-space:nowrap;}
+.fc-tbl td{padding:8px 10px;border-bottom:1px solid var(--lgray);white-space:nowrap;}
+.fc-tbl tr.fc-tot td{background:#fff7e8;border-top:2px solid var(--orange);border-bottom:none;}
+.fc-board tr.fc-brow{cursor:pointer;}
+.fc-board tr.fc-brow:hover td{background:#f0f7f9;}
+.fc-board tr.fc-on td{background:#eaf4f8;}
+.fc-board tr.fc-on td:first-child{box-shadow:inset 3px 0 0 var(--blue);}
+.fc-onpill{display:inline-block;background:var(--blue);color:#fff;font-size:9.5px;font-weight:900;letter-spacing:.6px;text-transform:uppercase;padding:1px 6px;margin-left:6px;vertical-align:1px;}
+.fc-foot{font-size:12px;color:#6b7073;margin:12px 2px 0;line-height:1.5;}
+.fc-seg{display:flex;gap:0;margin:0 0 10px;}
+.fc-segbtn{background:#fff;border:1.5px solid var(--lgray);border-right:none;color:#6b7073;font-family:inherit;font-size:12px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:7px 14px;cursor:pointer;}
+.fc-segbtn:last-child{border-right:1.5px solid var(--lgray);}
+.fc-segbtn.active{background:var(--blue);border-color:var(--blue);color:#fff;}
+.fc-chartbox{position:relative;height:400px;}
 canvas{max-height:320px;}
 a.opp{color:var(--blue);font-weight:700;text-decoration:none;}a.opp:hover{text-decoration:underline;}
 #loadingMsg{text-align:center;padding:60px;color:var(--navy);font-weight:700;}
@@ -119,20 +185,27 @@ a.opp{color:var(--blue);font-weight:700;text-decoration:none;}a.opp:hover{text-d
   </div>
   <div class="actions">
     <div class="asof" id="asof">Loading data&hellip;</div>
-    <select id="asofMonth" title="As-of month" style="padding:7px;border:none;font-weight:700;background:#0a4663;color:#fff;font-size:12px"></select>
-
   </div>
 </header>
 <div class="tabs">
   <div class="tab active" data-v="overview">Goal Trending</div>
   <div class="tab" data-v="wins">Wins</div>
   <div class="tab" data-v="forecast">Forecast &amp; Commit</div>
-  <div class="tab" data-v="historical">Historical Pacing</div>
-  <div class="tab" data-v="producers">Producers</div>
+  <div class="tab" data-v="historical">Historical Pacing &amp; Producers</div>
   <div class="tab" data-v="pipeline">Pipeline</div>
   <div class="tab" data-v="industry">Industry Insights</div>
   <div class="tab" data-v="insights">Growth Insights</div>
   <div class="tab" data-v="glossary">Glossary</div>
+</div>
+<div class="gbar">
+  <div class="gfg"><label>Year</label><select id="gYear" title="Reporting year. Live-connected to Power BI; re-queries the model for the selected year."></select></div>
+  <div class="gfg"><label>Actuals Through</label><select id="asofMonth" title="Months up to and including this one are actuals; months after it are forecast."></select></div>
+  <div class="gspacer"></div>
+  <div class="gfg grev"><label>Revenue</label><select id="gRev" title="Applies to the Won Revenue figures on Goal Trending, Wins, Growth Insights, Industry Insights, and Historical Pacing &amp; Producers">
+    <option value="rec" selected>Recurring only</option>
+    <option value="nonrec">Non-recurring only</option>
+    <option value="both">Recurring + non-recurring</option>
+  </select></div>
 </div>
 <main>
   <div id="loadingMsg">Loading the embedded dataset&hellip;</div>
@@ -144,12 +217,12 @@ a.opp{color:var(--blue);font-weight:700;text-decoration:none;}a.opp:hover{text-d
       <div class="fg"><label>Practice</label><select id="ovPractice"></select></div>
       <div class="fg"><label>Market</label><select id="ovMarket"></select></div>
       <div class="fg"><label>Industry</label><select id="ovIndustry"></select></div>
-      <div class="fg"><label>Metric</label><select id="ovMetric"><option value="WonRev">Won Revenue</option><option value="Total">Total Contribution (Referral / Convergence)</option><option value="NonRec">Non-Recurring</option></select></div>
+      <div class="fg"><label>Metric</label><select id="ovMetric"><option value="WonRev">Won Revenue</option><option value="Total">Total Contribution (Referral / Convergence)</option></select></div>
       <div class="fg" style="justify-content:flex-end"><button class="btn ghost" onclick="resetFilters('ov')">Reset</button></div>
     </div>
     <div class="kpis" id="ovKpis"></div>
     <div class="grid2">
-      <div class="card"><h3><span class="bar"></span>Market Trending to Goal</h3><div class="desc" id="ovMarketDesc">% of full-year plan attained vs. expected pace for today's date.</div><div id="ovMarketTbl" class="tbl-wrap"></div></div>
+      <div class="card"><h3><span class="bar"></span>Market Trending to Goal</h3><div class="desc" id="ovMarketDesc">% of the full-year plan closed, against the share of the plan historically due by today's date.</div><div id="ovMarketTbl" class="tbl-wrap"></div></div>
       <div class="card"><h3><span class="bar"></span>Practice Trending to Goal</h3><div class="desc">Won revenue vs. annual plan by practice (EB / HRC / P&amp;C).</div><canvas id="ovPracticeChart"></canvas></div>
     </div>
     <div class="card grid1"><h3><span class="bar"></span><span id="ovRegionTitle">Region Cumulative Won vs. Plan &amp; Seasonal Pace</span></h3><div class="desc" id="ovRegionDesc">Monthly cumulative won revenue vs. annual plan and historical seasonal pace curve.</div><canvas id="ovRegionChart"></canvas></div>
@@ -180,106 +253,109 @@ a.opp{color:var(--blue);font-weight:700;text-decoration:none;}a.opp:hover{text-d
 
   <!-- FORECAST & COMMIT -->
   <div class="view" id="v-forecast">
-    <div class="section-head"><span class="accent"></span>Forecast &amp; Commit &mdash; Booked + Commit, Forward-Looking</div>
+    <div class="section-head"><span class="accent"></span>Forecast &amp; Commit &mdash; What We Closed, and What Closes Next</div>
+    <div class="fc-legend">
+      <span class="fc-chip fc-chip-a">Closed</span> booked in CRM
+      <span class="fc-chip fc-chip-f">Forecast</span> committed deals not yet signed
+      <span class="fc-chip fc-chip-p">Total Expected</span> Closed + Forecast
+      <span class="fc-chip fc-chip-g">Gap to Plan</span> Total Expected &minus; Plan
+    </div>
     <div class="filters">
-      <div class="fg"><label>Window</label><select id="fcWindow"><option value="month">This Month</option><option value="quarter">This Quarter</option><option value="next">Next Month</option></select></div>
+      <div class="fg"><label>Focus Period</label><select id="fcPeriod">
+        <option value="month">This Month</option>
+        <option value="nextmonth">Next Month</option>
+        <option value="q" selected>This Quarter</option>
+        <option value="nq">Next Quarter</option>
+        <option value="ytd">Year to Date</option>
+        <option value="rest">Remaining Months</option>
+        <option value="fy">Full Year (Jan&ndash;Dec)</option>
+      </select></div>
+      <div class="fg"><label>Practice</label><select id="fcPractice">
+        <option value="EB" selected>EB only</option>
+        <option value="__ALL__">All practices</option>
+        <option value="HRC">HRC</option>
+        <option value="P&amp;C">P&amp;C</option>
+      </select></div>
       <div class="fg"><label>Market</label><select id="fcMarket"></select></div>
       <div class="fg"><label>Producer</label><select id="fcProducer"></select></div>
+      <div class="fg"><label>Projection Includes</label><select id="fcInclude">
+        <option value="h" selected>Committed only</option>
+        <option value="hm">Committed + Probable</option>
+        <option value="all">Committed + Probable + Uncertain</option>
+      </select></div>
       <div class="fg" style="justify-content:flex-end"><button class="btn ghost" onclick="resetFilters('fc')">Reset</button></div>
     </div>
+    <p class="muted" style="margin:-6px 0 14px">Forecast figures below come from the Sales Leader Input form currently open in this browser for whichever market that form is set to &mdash; not yet a live read-back of every market leader's saved SharePoint submission. <b>Projection Includes</b> only changes what counts on this tab; the Sales Leader Input numbers below always count Committed only.</p>
     <div class="kpis" id="fcKpis"></div>
 
     <div class="card grid1 mmr-card">
-      <h3 style="cursor:pointer" onclick="toggleMMR()"><span class="bar"></span>Monthly Market Review &mdash; Leader Input <span id="mmrChevron" style="margin-left:8px;font-weight:400;color:var(--lblue)">&#9656; show</span></h3>
-      <div class="desc">Market leaders: enter your monthly commit, quarter-finish deals, next-month forecast, and producer coaching plan. Entries save in your browser and flow into the KPIs and summary above/below. Tied to the selected <b>Market</b> and current month.</div>
+      <h3 style="cursor:pointer" onclick="toggleMMR()"><span class="bar"></span>Sales Leader Input &mdash; What Is Closing, and When <span id="mmrChevron" style="margin-left:8px;font-weight:400;color:var(--lblue)">&#9656; show</span></h3>
+      <div class="desc"><b>Which deals are closing, in what month, and how confident are you?</b> Pick your market, pull your open deals from CRM, correct what you know better, delete what is not real. Everything else on this page recalculates from that one list. Saved in your browser and to SharePoint.</div>
       <div id="mmrBody" style="display:none">
         <div class="mmr-meta">
           <div class="fg"><label>Market</label><select id="mmrMarket" onchange="mmrMarketChange()"></select></div>
-          <div class="fg"><label>Market Leader</label><input id="mmrLeader" type="text" placeholder="Your name"></div>
-          <div class="fg"><label>Month / Date</label><input id="mmrMonth" type="text" readonly></div>
+          <div class="fg"><label>Sales Leader <span class="mmr-auto-tag">auto</span></label><select id="mmrLeader" onchange="mmrLeaderPick()"></select></div>
+          <div class="fg"><label>Review Month</label><input id="mmrMonth" type="text" readonly></div>
         </div>
 
-        <div class="mmr-sec"><span class="mmr-num">1</span> Monthly Commit</div>
-        <p class="mmr-help">Revenue already booked is pulled from the worksheet automatically. Your <b>additional confident-to-close</b> rolls up automatically from the specific deals you list in Step 2 below &mdash; no retyping. Pick the close horizon to commit against.</p>
+        <div class="mmr-sec"><span class="mmr-num">1</span> Deals Expected to Close</div>
+        <p class="mmr-help"><b>Which deals are closing, in what month, and how confident are you?</b> One list &mdash; each deal closes once. Pick your market above, pull open deals from CRM, correct what you know better, delete what isn't real. Step 2 (Your Number) below, and the Forecast KPIs above, recalculate from this list.</p>
+        <p class="mmr-help mmr-conf-key">
+          <span class="mmr-tag mmr-h">Committed</span> I'm putting my name on it &mdash; <b>counts</b> toward Total Committed / Total Expected.
+          <span class="mmr-tag mmr-m">Probable</span> <b>Not counted</b> &mdash; likely but not committed.
+          <span class="mmr-tag mmr-l">Uncertain</span> <b>Not counted</b> &mdash; early / long-shot.
+        </p>
+        <div style="margin-bottom:10px">
+          <button class="btn" onclick="mmrPullDeals()">Pull my open deals from CRM</button>
+          <select id="mmrMinStage" style="width:auto;padding:8px 10px;border:1.5px solid var(--lgray);font-size:13px;margin-left:6px">
+            <option value="0.9">at 90%+ only</option>
+            <option value="0.75" selected>at 75% and up</option>
+            <option value="0.5">at 50% and up</option>
+            <option value="0.25">everything open</option>
+          </select>
+          <button class="btn ghost mmr-addrow" onclick="mmrAddRow()">+ Add a deal</button>
+          <button class="btn ghost mmr-addrow" onclick="mmrClearDeals()">Clear list</button>
+          <span id="mmrPullMsg" class="muted" style="margin-left:10px;font-size:12px"></span>
+        </div>
+        <p class="mmr-help" style="margin-top:0"><span class="flag red" style="margin-right:4px">PAST DUE</span> flags a deal whose Expected Close has already gone by &mdash; update the date or move it to Recent Wins if it closed.</p>
+        <table class="mmr-tbl mmr-hz-tbl">
+          <thead><tr><th>Deal / Client</th><th>Producer</th><th>Market</th><th style="text-align:right">Amount</th><th>Expected Close</th><th>Confidence</th><th>Notes</th><th></th></tr></thead>
+          <tbody id="mmrDealBody"></tbody>
+          <tfoot id="mmrDealFoot"></tfoot>
+        </table>
+
+        <div class="mmr-sec"><span class="mmr-num">2</span> Your Number for <span id="mmrPeriodLabel">This Month</span></div>
+        <p class="mmr-help">Builds itself from Step 1 above &mdash; nothing to type here except <b>Other expected revenue</b> (money you're confident about that doesn't have a named CRM deal yet). Follows the <b>Focus Period</b> selected in the filters above.</p>
         <table class="mmr-tbl">
           <tbody>
-            <tr><td style="width:60%">Revenue already booked this month <span class="muted">(auto)</span></td><td><span id="mmrBooked" class="mmr-auto">$0</span></td></tr>
-            <tr>
-              <td>Commit horizon
-                <select id="mmrCommitHz" onchange="mmrRollup();renderForecast()" style="margin-left:8px;width:auto;padding:4px 8px;display:inline-block;vertical-align:middle">
-                  <option value="this">This Month</option>
-                  <option value="qtr">Quarter End</option>
-                  <option value="next">Next Month</option>
-                </select>
-              </td>
-              <td class="muted" style="font-size:12px" id="mmrHzHint">deals you expect to close this month</td>
-            </tr>
-            <tr><td>Additional confident-to-close revenue <span class="muted">(auto from Step 2 deals)</span></td><td><span id="mmrAddl" class="mmr-auto">$0</span></td></tr>
+            <tr><td style="width:60%">Revenue already booked <span id="mmrPeriodLabel2" class="muted">this month</span> <span class="muted">(auto)</span></td><td><span id="mmrBooked" class="mmr-auto">$0</span></td></tr>
+            <tr><td>Committed deals closing <span id="mmrPeriodLabel3" class="muted">this month</span> <span class="muted">(auto from Step 1 &mdash; Committed only)</span></td><td><span id="mmrAddl" class="mmr-auto">$0</span></td></tr>
+            <tr><td>Other expected revenue <span id="mmrPeriodLabel4" class="muted">this month</span> <span class="muted">(no CRM deal yet)</span></td><td><input id="mmrOtherExp" type="number" min="0" step="1000" placeholder="$" style="width:120px;text-align:right" oninput="mmrRollup()"></td></tr>
             <tr class="mmr-total-row"><td><b>TOTAL COMMITTED REVENUE</b></td><td><span id="mmrTotal" class="mmr-auto"><b>$0</b></span></td></tr>
-            <tr><td>% to monthly goal <span class="muted">(seasonal period goal)</span></td><td><span id="mmrPct" class="mmr-auto">&mdash;</span></td></tr>
+            <tr><td>% to goal <span class="muted">(historical seasonal pace, this period's share of plan)</span></td><td><span id="mmrPct" class="mmr-auto">&mdash;</span></td></tr>
           </tbody>
         </table>
 
-        <div class="mmr-sec"><span class="mmr-num">2</span> Deal-Level Forecast by Close Horizon</div>
-        <p class="mmr-help">List the <b>specific deals</b> you expect to close in each window. Each deal closes once, so it lives in <b>one</b> horizon &mdash; choose where it belongs by its expected close date. <b>Deal / Client</b> and <b>Producer</b> are chosen from open opportunities in CRM; if it isn't in the pipeline, it can't be committed here. Each table totals on its own and is compared against the weighted CRM pipeline for that same window.</p>
-        <button class="btn ghost mmr-addrow" onclick="mmrPrefillHorizons()" style="margin-bottom:10px">Pull open deals from CRM (auto-sorts by close date)</button>
-
-        <!-- THIS MONTH -->
-        <div class="mmr-hz-head mmr-hz-this"><span>Expected to Close <b>This Month</b></span><span class="mmr-hz-sub" id="mmrThisSub"></span></div>
-        <table class="mmr-tbl mmr-hz-tbl">
-          <thead><tr><th>Deal / Client</th><th>Producer</th><th style="text-align:right">Amount</th><th>Expected Close</th><th>Confidence</th><th>Notes</th><th></th></tr></thead>
-          <tbody id="mmrThisBody"></tbody>
-          <tfoot>
-            <tr class="mmr-total-row"><td colspan="2"><b>Your forecast &mdash; This Month</b></td><td style="text-align:right"><b id="mmrTotThis">$0</b></td><td colspan="4"></td></tr>
-            <tr><td colspan="2" class="muted">CRM pipeline (weighted, this month)</td><td style="text-align:right"><span id="mmrCrmThis" class="mmr-auto">$0</span></td><td colspan="4"></td></tr>
-            <tr><td colspan="2"><b>Delta vs. CRM</b></td><td style="text-align:right"><span id="mmrDeltaThis" class="mmr-auto"><b>&mdash;</b></span></td><td colspan="4"></td></tr>
-          </tfoot>
+        <div class="mmr-sec" style="margin-top:20px">Your Month-by-Month Number <span class="mmr-hz-sub">built automatically from Step 1</span></div>
+        <table class="mmr-tbl" id="mmrMonthTbl">
+          <thead><tr><th>Period</th><th style="text-align:right">Counts in Total Expected<br><span class="muted" style="font-weight:400">(Committed)</span></th><th style="text-align:right">Not Included in Forecast<br><span class="muted" style="font-weight:400">(Probable + Uncertain)</span></th><th style="text-align:right">Everything Listed</th></tr></thead>
+          <tbody id="mmrMonthBody"></tbody>
         </table>
-        <button class="btn ghost mmr-addrow" onclick="mmrAddRow('this')">+ Add deal (this month)</button>
-        <button class="btn ghost mmr-addrow" onclick="mmrPrefillHorizon('this')">Pull this-month deals from CRM</button>
-
-        <!-- QUARTER END -->
-        <div class="mmr-hz-head mmr-hz-qtr" style="margin-top:20px"><span>Expected to Close by <b>Quarter End</b></span><span class="mmr-hz-sub" id="mmrQtrSub"></span></div>
-        <p class="mmr-help" style="margin-top:2px">Deals closing later this quarter (after this month, on or before the last day of the quarter). Don't repeat this-month deals here.</p>
-        <table class="mmr-tbl mmr-hz-tbl">
-          <thead><tr><th>Deal / Client</th><th>Producer</th><th style="text-align:right">Amount</th><th>Expected Close</th><th>Confidence</th><th>Notes</th><th></th></tr></thead>
-          <tbody id="mmrQtrBody"></tbody>
-          <tfoot>
-            <tr class="mmr-total-row"><td colspan="2"><b>Your forecast &mdash; Quarter End</b></td><td style="text-align:right"><b id="mmrTotQtr">$0</b></td><td colspan="4"></td></tr>
-            <tr><td colspan="2" class="muted">CRM pipeline (weighted, rest of quarter)</td><td style="text-align:right"><span id="mmrCrmQtr" class="mmr-auto">$0</span></td><td colspan="4"></td></tr>
-            <tr><td colspan="2"><b>Delta vs. CRM</b></td><td style="text-align:right"><span id="mmrDeltaQtr" class="mmr-auto"><b>&mdash;</b></span></td><td colspan="4"></td></tr>
-          </tfoot>
-        </table>
-        <button class="btn ghost mmr-addrow" onclick="mmrAddRow('qtr')">+ Add deal (quarter end)</button>
-        <button class="btn ghost mmr-addrow" onclick="mmrPrefillHorizon('qtr')">Pull quarter-end deals from CRM</button>
-
-        <!-- NEXT MONTH -->
-        <div class="mmr-hz-head mmr-hz-next" style="margin-top:20px"><span>Expected to Close <b>Next Month</b></span><span class="mmr-hz-sub" id="mmrNextSub"></span></div>
-        <table class="mmr-tbl mmr-hz-tbl">
-          <thead><tr><th>Deal / Client</th><th>Producer</th><th style="text-align:right">Amount</th><th>Expected Close</th><th>Confidence</th><th>Notes</th><th></th></tr></thead>
-          <tbody id="mmrNextBody"></tbody>
-          <tfoot>
-            <tr class="mmr-total-row"><td colspan="2"><b>Your forecast &mdash; Next Month</b></td><td style="text-align:right"><b id="mmrTotNext">$0</b></td><td colspan="4"></td></tr>
-            <tr><td colspan="2" class="muted">CRM pipeline (weighted, next month)</td><td style="text-align:right"><span id="mmrCrmNext" class="mmr-auto">$0</span></td><td colspan="4"></td></tr>
-            <tr><td colspan="2"><b>Delta vs. CRM</b></td><td style="text-align:right"><span id="mmrDeltaNext" class="mmr-auto"><b>&mdash;</b></span></td><td colspan="4"></td></tr>
-          </tfoot>
-        </table>
-        <button class="btn ghost mmr-addrow" onclick="mmrAddRow('next')">+ Add deal (next month)</button>
-        <button class="btn ghost mmr-addrow" onclick="mmrPrefillHorizon('next')">Pull next-month deals from CRM</button>
 
         <div class="mmr-meta" style="margin-top:14px">
-          <div class="fg" style="flex:1"><label>Key opportunities driving the forecast</label><input id="mmrNextOpps" type="text" placeholder="Brief notes on what's driving these numbers"></div>
+          <div class="fg" style="flex:1"><label>What is driving this forecast (and what could break it)</label><input id="mmrNextOpps" type="text" placeholder="The two or three things this number depends on"></div>
         </div>
 
         <div class="mmr-sec"><span class="mmr-num">3</span> Producer Focus</div>
-        <p class="mmr-help">Underperforming producers &mdash; your plan to coach, support, and drive improvement through quarter-end.</p>
+        <p class="mmr-help">Producers behind their goal pace &mdash; your plan to coach, support, and close the gap.</p>
         <table class="mmr-tbl" id="mmrProdTbl">
           <thead><tr><th>Producer</th><th>Current Gap / Issue</th><th>Coaching &amp; Support Plan</th><th>Target Outcome</th><th></th></tr></thead>
           <tbody id="mmrProdBody"></tbody>
         </table>
         <button class="btn ghost mmr-addrow" onclick="mmrAddProdRow()">+ Add producer</button>
+        <button class="btn ghost mmr-addrow" onclick="mmrPrefillProducers()" style="margin-left:8px">Pull producers behind goal pace</button>
 
-        <div class="mmr-sec" style="margin-top:26px"><span class="mmr-num">3b</span> Recent Wins &mdash; How We Won</div>
+        <div class="mmr-sec" style="margin-top:26px"><span class="mmr-num">4</span> Recent Wins &mdash; How We Won</div>
         <p class="mmr-help">Producers with recent closed-won deals. Capture the play so the whole market can repeat it: how the first meeting was teed up, how it advanced through the stages, and who on each side was involved &amp; when. Use <b>Pull recent wins</b> to auto-seed the producer + deal from CRM.</p>
         <table class="mmr-tbl" id="mmrWinTbl">
           <thead><tr><th style="width:13%">Producer</th><th style="width:15%">Deal / Client (CRM)</th><th>How the 1st meeting was teed up</th><th>How it advanced through stages</th><th>Client side &mdash; who &amp; when</th><th>Our team &mdash; who &amp; when</th><th></th></tr></thead>
@@ -289,51 +365,61 @@ a.opp{color:var(--blue);font-weight:700;text-decoration:none;}a.opp:hover{text-d
         <button class="btn ghost mmr-addrow" onclick="mmrPrefillWins()" style="margin-left:8px">Pull recent wins from CRM</button>
 
         <div class="mmr-actions">
-          <button class="btn" onclick="mmrSave()">&#10003; Save Review</button>
+          <button class="btn" onclick="mmrSave()">&#10003; Save My Forecast</button>
           <span id="mmrSaved" class="mmr-savedmsg"></span>
-          <button class="btn ghost" onclick="mmrPrefillProducers()">Pull behind-pace producers</button>
           <button class="btn ghost" onclick="mmrClear()">Clear this market</button>
         </div>
       </div>
     </div>
 
-    <div class="grid2">
-      <div class="card"><h3><span class="bar"></span>Projected Finish by Market</h3><div class="desc">Booked + Commit (90%+) + Best Case (75%) stacked against in-window goal. Black line = period goal.</div><canvas id="fcMarketChart"></canvas></div>
-      <div class="card"><h3><span class="bar"></span>Commit Coverage</h3><div class="desc">How booked + weighted commit pipeline covers the period goal for the region.</div><canvas id="fcCoverChart"></canvas></div>
+    <div class="card grid1">
+      <h3><span class="bar"></span>Where We Stand &mdash; <span id="fcBoardTitle"></span></h3>
+      <div class="desc" id="fcBoardDesc"></div>
+      <div class="tbl-wrap"><table class="fc-tbl fc-board" id="fcBoard"></table></div>
+      <p class="fc-foot">Click any row to make it the focus period for the market table and chart below.</p>
     </div>
-    <div class="card grid1"><h3><span class="bar"></span>Confident to Close &mdash; Deals in Window</h3><div class="desc">Open deals at 50%+ with a predicted close inside the selected window. <b>Slipped</b> = close date is already in the past. "Opp" opens the deal in Dynamics.</div><div id="fcDealTbl" class="tbl-wrap"></div></div>
-    <div class="card grid1"><h3><span class="bar"></span>Producer Focus &mdash; Behind Pace, with Committable Pipeline</h3><div class="desc">Underperforming producers (behind seasonal pace) with their in-window committable pipeline, meetings, and delinquent pipeline to frame the coaching conversation.</div><div id="fcProdTbl" class="tbl-wrap"></div></div>
-    <div class="card grid1" id="mmrSummaryCard" style="display:none"><h3><span class="bar"></span>Monthly Market Review &mdash; Submitted Summary</h3><div class="desc">The market leader's saved input for this market and month, read back for the Forecast &amp; Commit call.</div><div id="mmrSummary"></div></div>
+
+    <div class="card grid1">
+      <h3><span class="bar"></span>By Market &mdash; <span id="fcDetailTitle"></span></h3>
+      <div class="desc" id="fcDetailDesc"></div>
+      <div class="tbl-wrap"><table class="fc-tbl" id="fcDetail"></table></div>
+    </div>
+
+    <div class="card grid1">
+      <h3><span class="bar"></span>Closed + Forecast vs Plan</h3>
+      <div class="fc-seg" id="fcChartSeg">
+        <button class="fc-segbtn active" data-v="market" onclick="fcSetChart('market')">By market</button>
+        <button class="fc-segbtn" data-v="month" onclick="fcSetChart('month')">By month</button>
+      </div>
+      <div class="desc" id="fcChartDesc"></div>
+      <div class="fc-chartbox"><canvas id="fcMainChart"></canvas></div>
+    </div>
+
+    <div class="card grid1"><h3><span class="bar"></span>Producer Focus &mdash; Behind Their Goal Pace, with Pipeline They Could Still Convert</h3><div class="desc">Producers who have closed less of their goal than history says is due by now, with the pipeline they could still convert this year, meetings, and delinquent pipeline &mdash; to frame the coaching conversation.</div><div id="fcProdTbl" class="tbl-wrap"></div></div>
+    <div class="card grid1" id="mmrSummaryCard" style="display:none"><h3><span class="bar"></span>Submitted Forecast &mdash; Read-Back</h3><div class="desc">What the sales leader saved for this market and month, read back for the Forecast &amp; Commit call.</div><div id="mmrSummary"></div></div>
   </div>
 
   <!-- HISTORICAL -->
   <div class="view" id="v-historical">
-    <div class="section-head"><span class="accent"></span>Historical Pacing &mdash; Are We Tracking To How We Usually Perform?</div>
+    <div class="section-head"><span class="accent"></span>Historical Pacing &amp; Producers</div>
     <div class="filters">
-      <div class="fg"><label>Compare</label><select id="hLevel"><option value="Market">Market</option><option value="Practice">Practice</option><option value="Producer">Producer</option></select></div>
-      <div class="fg"><label>Entity</label><select id="hEntity"></select></div>
+      <div class="fg"><label>Market</label><select id="hMarket"></select></div>
+      <div class="fg"><label>Practice</label><select id="hPractice"></select></div>
+      <div class="fg"><label>Producer</label><select id="hProducer"></select></div>
+      <div class="fg"><label>Compare This Year To &mdash; Tick Any Years</label>
+        <div class="segwrap" id="hCompare"></div>
+      </div>
+      <div class="fg"><label>Producer Status</label><select id="hStatus"><option value="">All producers</option><option value="ahead">Ahead of their goal pace</option><option value="behind">Behind their goal pace</option><option value="atrisk">Nothing closed yet</option></select></div>
       <div class="fg" style="justify-content:flex-end"><button class="btn ghost" onclick="resetFilters('h')">Reset</button></div>
     </div>
     <div class="kpis" id="hKpis"></div>
     <div class="grid2">
-      <div class="card"><h3><span class="bar"></span>Seasonal Run-Rate by Month</h3><div class="desc">Average historical monthly won revenue vs. current year actuals.</div><canvas id="hSeasonChart"></canvas></div>
-      <div class="card"><h3><span class="bar"></span>Year-over-Year Won Revenue</h3><div class="desc">Full-year totals. Current year is partial (year-to-date).</div><canvas id="hYoyChart"></canvas></div>
+      <div class="card"><h3><span class="bar"></span>Month by Month &mdash; This Year vs. Selected Years</h3><div class="desc" id="hSeasonDesc"></div><canvas id="hSeasonChart"></canvas></div>
+      <div class="card"><h3><span class="bar"></span>Year over Year</h3><div class="desc">Full-year closed revenue by year. The current year is partial &mdash; it only runs through the as-of month.</div><canvas id="hYoyChart"></canvas></div>
     </div>
-    <div class="card grid1"><h3><span class="bar"></span>YTD vs. Historical YTD-Through-Same-Date</h3><div class="desc">This year's revenue through today's month vs. the same window in prior years.</div><div id="hYtdTbl" class="tbl-wrap"></div></div>
-  </div>
-
-  <!-- PRODUCERS -->
-  <div class="view" id="v-producers">
-    <div class="section-head"><span class="accent"></span>Producers &mdash; Anyone With a Revenue Goal</div>
-    <div class="filters">
-      <div class="fg"><label>Producer</label><select id="prProducer"></select></div>
-      <div class="fg"><label>Market</label><select id="prMarket"></select></div>
-      <div class="fg"><label>Practice</label><select id="prPractice"></select></div>
-      <div class="fg"><label>Status</label><select id="prStatus"><option value="">All</option><option value="ahead">Ahead of Goal</option><option value="behind">Behind Pace</option><option value="atrisk">No Won YTD</option></select></div>
-      <div class="fg" style="justify-content:flex-end"><button class="btn ghost" onclick="resetFilters('pr')">Reset</button></div>
-    </div>
-    <div class="kpis" id="prKpis"></div>
-    <div class="card grid1"><h3><span class="bar"></span>Producer Goal Attainment &amp; Pace</h3><div class="desc">Sortable. "Pace Gap" = attainment % minus expected seasonal pace % for today.</div><div id="prTbl" class="tbl-wrap"></div></div>
+    <div class="card grid1"><h3><span class="bar"></span>Market: vs. Plan and vs. Prior Years</h3><div class="desc" id="hMktDesc"></div><div id="hMktTbl" class="tbl-wrap pace-wrap"></div></div>
+    <div class="card grid1"><h3><span class="bar"></span>Practice: vs. Plan and vs. Prior Years</h3><div class="desc" id="hPracDesc"></div><div id="hPracTbl" class="tbl-wrap pace-wrap"></div></div>
+    <div class="card grid1"><h3><span class="bar"></span>Producer Goal Attainment</h3><div class="desc" id="hProdDesc"></div><div id="hProdTbl" class="tbl-wrap pace-wrap"></div></div>
   </div>
 
   <!-- PIPELINE -->
@@ -344,6 +430,7 @@ a.opp{color:var(--blue);font-weight:700;text-decoration:none;}a.opp:hover{text-d
       <div class="fg"><label>Market</label><select id="pMarket"></select></div>
       <div class="fg"><label>Industry</label><select id="pIndustry"></select></div>
       <div class="fg"><label>Producer</label><select id="pProducer"></select></div>
+      <div class="fg"><label>Close Year</label><select id="pHorizon" title="Which year the deal is predicted to close in"></select></div>
       <div class="fg"><label>Flags</label><select id="pFlag"><option value="">All Deals</option><option value="overdue">Predicted Close in Past</option><option value="big">Large (&ge;$100k)</option></select></div>
       <div class="fg"><label>Search Company</label><input id="pSearch" placeholder="Company&hellip;"></div>
       <div class="fg" style="justify-content:flex-end"><button class="btn ghost" onclick="resetFilters('p')">Reset</button></div>
@@ -354,13 +441,18 @@ a.opp{color:var(--blue);font-weight:700;text-decoration:none;}a.opp:hover{text-d
       <div class="card"><h3><span class="bar"></span>Weighted Pipeline by Stage</h3><div class="desc">Raw vs. probability-weighted ($ &times; stage prob).</div><canvas id="pStageChart"></canvas></div>
       <div class="card"><h3><span class="bar"></span>Expected Close by Month</h3><div class="desc">Weighted pipeline $ by predicted close month. Bars left of today (orange) are overdue. Click a bar to drill in.</div><canvas id="pMonthChart"></canvas><div class="clickhint">&#9650; Click a bar to drill in</div></div>
     </div>
+    <div class="card grid1"><h3><span class="bar"></span>Next 18 Months of Pipeline</h3>
+      <div class="desc" id="p18Desc">Weighted pipeline ($ &times; stage probability), by predicted close month, for the next 18 months starting with the current Actuals-Through month. Uses whatever filters are set above.</div>
+      <canvas id="p18Chart" height="90"></canvas>
+      <div id="p18Tbl" class="tbl-wrap" style="margin-top:16px"></div>
+    </div>
     <div class="card grid1"><h3><span class="bar"></span>Pipeline by Industry</h3><div class="desc">Open pipeline $ by industry &mdash; which industries are we prospecting most in. Click a bar to filter to that industry.</div><canvas id="pIndustryChart"></canvas><div class="clickhint">&#9650; Click a bar to drill in</div></div>
     <div class="card grid1"><h3><span class="bar"></span>Deal-Level Pipeline</h3><div class="desc">Every open opportunity. <span class="flag red">OVERDUE</span> = predicted close month before current month. Click headers to sort.</div><div id="pTbl" class="tbl-wrap"></div></div>
   </div>
   <!-- INDUSTRY INSIGHTS -->
   <div class="view" id="v-industry">
     <div class="section-head"><span class="accent"></span>Industry Insights &mdash; Winning vs. Prospecting by Market</div>
-    <p class="muted" style="margin-bottom:14px">Where are we winning, and where are we prospecting &mdash; by industry and market. Won = current-year closed-won (recurring). Pipeline = open opportunities (raw $). Deals with no industry tag show as <b>Unclassified</b>.</p>
+    <p class="muted" style="margin-bottom:14px">Where are we winning, and where are we prospecting &mdash; by industry and market. Won = current-year closed-won (<span id="iScopeWord1">recurring</span>, per the Revenue filter above). Pipeline = open opportunities (raw $). Deals with no industry tag show as <b>Unclassified</b>.</p>
     <div class="filters">
       <div class="fg"><label>Market</label><select id="iMarket"></select></div>
       <div class="fg"><label>View</label><select id="iView"><option value="rev">Revenue ($)</option><option value="count">Deal Count</option></select></div>
@@ -368,7 +460,7 @@ a.opp{color:var(--blue);font-weight:700;text-decoration:none;}a.opp:hover{text-d
     </div>
     <div class="kpis" id="iKpis"></div>
     <div class="grid2">
-      <div class="card"><h3><span class="bar"></span>Most Winning Industries</h3><div class="desc">Closed-won (recurring) revenue by industry for the selected market.</div><canvas id="iWonChart"></canvas></div>
+      <div class="card"><h3><span class="bar"></span>Most Winning Industries</h3><div class="desc">Closed-won (<span id="iScopeWord2">recurring</span>) revenue by industry for the selected market.</div><canvas id="iWonChart"></canvas></div>
       <div class="card"><h3><span class="bar"></span>Most Prospecting Industries</h3><div class="desc">Open pipeline $ by industry for the selected market.</div><canvas id="iPipeChart"></canvas></div>
     </div>
     <div class="card grid1"><h3><span class="bar"></span>Market &times; Industry Matrix</h3><div class="desc">Won (W) and open Pipeline (P) side by side for every market and industry. Heaviest cells are highlighted.</div><div id="iMatrix" class="tbl-wrap"></div></div>
@@ -393,12 +485,12 @@ a.opp{color:var(--blue);font-weight:700;text-decoration:none;}a.opp:hover{text-d
         <p style="margin:0 0 8px"><b>Why it exists:</b> the plan only gives an <i>annual</i> goal per producer. It does not say how much should land in any single month. Some months close more than others, so a flat &ldquo;annual &divide; 12&rdquo; would misjudge where we should be mid-year.</p>
         <p style="margin:0 0 8px"><b>How it's built:</b></p>
         <ol style="margin:0 0 10px 18px;padding:0">
-          <li style="margin-bottom:4px">For each prior complete year (2021&ndash;2025), measure the cumulative % of that year's won revenue that had landed by the end of each month &mdash; the <b>seasonal pace curve</b>.</li>
+          <li style="margin-bottom:4px">For each prior complete year (2021&ndash;2025), measure the cumulative % of that year's won revenue that had landed by the end of each month &mdash; the <b>historical timing curve</b> &mdash; what share of a year is normally in the bag by each month.</li>
           <li style="margin-bottom:4px">Average those curves across years to get a typical share-of-year-booked by each month-end.</li>
           <li style="margin-bottom:4px">Multiply the annual plan by that cumulative share to get the Period Goal: <i>Annual Plan &times; (cumulative seasonal share through the selected period)</i>.</li>
         </ol>
         <p style="margin:0 0 8px"><b>Coverage %:</b> Projected Finish (Booked + 90%+ Commit) &divide; Period Goal. Example: a $1.4M projected finish against a ~$2.4M June Period Goal is <b>~61% covered</b>, leaving a ~$922K gap to fill from best-case (75%) deals, upside, or new activity.</p>
-        <p style="margin:0;padding:10px 12px;background:#fff7e8;border-left:3px solid var(--orange);font-size:12.5px"><b>Important caveat:</b> this is a <b>model-derived pace target</b>, not a leadership-set monthly quota. If leadership has explicit monthly commit targets, treat those as the source of truth and override this number.</p>
+        <p style="margin:0;padding:10px 12px;background:#fff7e8;border-left:3px solid var(--orange);font-size:12.5px"><b>Important caveat:</b> this is the <b>annual plan spread across the year using history</b>, not a leadership-set monthly quota. If leadership has explicit monthly commit targets, treat those as the source of truth and override this number.</p>
       </div>
     </div>
 
@@ -412,6 +504,7 @@ a.opp{color:var(--blue);font-weight:700;text-decoration:none;}a.opp:hover{text-d
           <tr><td><b>Projected Finish</b></td><td>Booked + Commit (90%+). The realistic expected landing point for the window.</td></tr>
           <tr><td><b>Best Case Upside</b></td><td>Projected Finish plus 75%-stage deals at best case. The optimistic ceiling if late-stage deals all land.</td></tr>
           <tr><td><b>Window</b></td><td>The forecast period in focus: This Month, This Quarter, or Next Month.</td></tr>
+          <tr><td><b>Forecast</b></td><td>The sales leader&rsquo;s committed call: named open deals they expect to sign, each stamped with a close month. Not a machine estimate &mdash; it is what the leader has said will land. Added to Closed/Booked to give the realistic expected finish for the window.</td></tr>
           <tr><td><b>Slipped</b></td><td>An open deal whose predicted close date is already in the past &mdash; needs re-dating or a status update.</td></tr>
         </tbody>
       </table>
@@ -423,7 +516,7 @@ a.opp{color:var(--blue);font-weight:700;text-decoration:none;}a.opp:hover{text-d
         <thead><tr><th style="cursor:default">Term</th><th style="cursor:default">Definition</th></tr></thead>
         <tbody>
           <tr><td><b>Won Revenue</b></td><td>Closed recurring revenue credited to a producer in the period.</td></tr>
-          <tr><td><b>Total Contribution</b></td><td>Referral / convergence (cross-practice) sales only &mdash; measured against the Convergence Goal Tracker. This is the credited cross-sell contribution and does <b>not</b> include a producer's primary-practice won revenue. Florida is tracked as two markets: North/Central Florida and South Florida. Because convergence tracking began in 2026, there is no prior-year history, so no seasonal pace or &ldquo;behind pace&rdquo; comparison is shown for this metric &mdash; only attainment against the annual goal.</td></tr>
+          <tr><td><b>Total Contribution</b></td><td>Referral / convergence (cross-practice) sales only &mdash; measured against the Convergence Goal Tracker. This is the credited cross-sell contribution and does <b>not</b> include a producer's primary-practice won revenue. Florida is tracked as two markets: North/Central Florida and South Florida. Because convergence tracking began in 2026, there is no prior-year history, so no historical timing comparison is shown for this metric &mdash; only attainment against the annual goal.</td></tr>
           <tr><td><b>Convergence Rev</b></td><td>Revenue from cross-practice / cross-sell (referral) deals (e.g., an EB producer sourcing a P&amp;C opportunity). This is the basis for <b>Total Contribution</b> and is compared to each market's goal in the Convergence Goal Tracker.</td></tr>
           <tr><td><b>Raw Pipeline</b></td><td>Total face value of open deals, regardless of stage probability.</td></tr>
           <tr><td><b>Weighted Pipeline</b></td><td>Open deal value &times; the stage probability (25%=0.25, 50%=0.50, 75%=0.75, 90%+=0.92). A risk-adjusted view.</td></tr>
@@ -431,7 +524,8 @@ a.opp{color:var(--blue);font-weight:700;text-decoration:none;}a.opp:hover{text-d
           <tr><td><b>Overdue</b></td><td>An open deal whose predicted close month is before the current month &mdash; past due and needs attention.</td></tr>
           <tr><td><b>Delinquent Pipeline</b></td><td>Pipeline value flagged as stale / aged past its expected activity window (from producer data).</td></tr>
           <tr><td><b>Producer</b></td><td>Anyone with a revenue goal assigned in the plan.</td></tr>
-          <tr><td><b>Behind Pace</b></td><td>A producer whose booked-to-date trails the seasonal pace curve for where they should be by now.</td></tr>
+          <tr><td><b>Plan Thru [month]</b></td><td><b>Where the plan says we should be by now.</b> The full-year plan multiplied by the share of a year that is historically closed by that month. The dollars come from this year's plan; history only supplies the timing.</td></tr>
+          <tr><td><b>Behind Pace / Behind Goal Pace</b></td><td>A producer or market that has closed a smaller share of its goal than history says should typically be closed by this point in the year.</td></tr>
         </tbody>
       </table>
     </div>
@@ -678,6 +772,11 @@ function seasonalCurve(rows){const priorYears=DATA.years.filter(y=>y<CUR_YEAR);c
   if(!cnt)return MONTHS.map((_,i)=>(i+1)/12);return byMonth.map(v=>v/cnt);}
 function computeSeasonal(){DATA.regionCurve=seasonalCurve(DATA.cli);}
 function aggGoal(filterFn){return DATA.producers.filter(filterFn).reduce((a,p)=>a+p.goal,0);}
+// Pipeline rows (DATA.pipe) have no Practice column of their own -- Forecast &
+// Commit's new Practice filter looks it up via each deal's producer instead.
+function producerPractice(name){const p=DATA.producers.find(pp=>pp.producer===name);return p?p.practice:'';}
+function producerMarketOf(name){const p=DATA.producers.find(pp=>pp.producer===name);return p?p.market:'';}
+function dPracticeOf(d){return producerPractice(d.producer);}
 /* ---- market-goal resolver ----
    Producer Data carries a combined "Tennessee + Carolinas" goal, while Client Data
    tracks won revenue under separate "Carolinas" and "Tennessee" labels. This resolver
@@ -726,7 +825,13 @@ const IND_SHORT={
 function indShort(v){const k=(v==null||v==='')?'Unclassified':String(v).trim();return IND_SHORT[k]||k;}
 function indKey(r){return (r.industry==null||r.industry==='')?'Unclassified':String(r.industry).trim();}
 function indList(rows){return [...new Set(rows.map(indKey))].sort((a,b)=>a==='Unclassified'?1:(b==='Unclassified'?-1:(a<b?-1:1)));}
-function metricVal(r,m){return m==='Total'?r.conv:m==='NonRec'?r.nonrec:r.won;}
+// --- global Revenue scope (Goal Trending, Wins, Growth Insights, Industry Insights,
+// Historical Pacing & Producers; Forecast and MMR aren't wired in yet -- planned
+// as a follow-up once Forecast is rebuilt) ---
+let REV_SCOPE='rec'; // 'both' | 'rec' | 'nonrec'
+function revVal(r){const w=r.won||0,nr=r.nonrec||0;return REV_SCOPE==='rec'?(w-nr):REV_SCOPE==='nonrec'?nr:w;}
+function revScopeLabel(){return REV_SCOPE==='both'?'recurring + non-recurring':REV_SCOPE==='nonrec'?'non-recurring':'recurring';}
+function metricVal(r,m){return m==='Total'?r.conv:revVal(r);}
 function kpi(lbl,val,sub,cls){return `<div class="kpi ${cls}"><div class="lbl">${lbl}</div><div class="val">${val}</div><div class="sub muted">${sub}</div></div>`;}
 
 /* ---------- OVERVIEW ---------- */
@@ -771,11 +876,11 @@ function renderOverview(){
     h+=`<tr><td><b>${r.m}</b></td><td>${fmtK(r.w)}</td><td>${fmtK(r.g)}</td><td><div class="bar-cell"><div class="bar-fill" style="width:${Math.min(100,r.att*100)}%;background:${barColor}"></div><span class="bar-txt">${pct(r.att)}</span></div></td>`+
       (isTotal?'':`<td><span class="flag ${gap>=0?'ok':gap>-.1?'amber':'red'}">${gap>=0?'+':''}${pct(gap)}</span></td>`)+`</tr>`;});
   h+='</tbody></table>';document.getElementById('ovMarketTbl').innerHTML=h;
-  document.getElementById('ovMarketDesc').innerHTML=isTotal?'% of annual convergence goal attained (first year tracked &mdash; no seasonal pace baseline).':"% of full-year plan attained vs. expected pace for today's date.";
+  document.getElementById('ovMarketDesc').innerHTML=isTotal?'% of annual convergence goal attained (first year tracked &mdash; no seasonal pace baseline).':"% of the full-year plan closed, against the share of the plan historically due by today's date.";
   document.getElementById('ovRegionTitle').innerHTML=isTotal?'Region Cumulative Referral Rev vs. Convergence Goal':'Region Cumulative Won vs. Plan &amp; Seasonal Pace';
   document.getElementById('ovRegionDesc').innerHTML=isTotal?'Monthly cumulative referral/convergence revenue vs. the annual convergence goal. No seasonal pace shown &mdash; convergence has no prior-year history.':'Monthly cumulative won revenue vs. annual plan and historical seasonal pace curve.';
   const pracs=uniq(DATA.cli.map(r=>r.practice));destroyChart('ovPracticeChart');
-  const pw=pracs.map(p=>rows.filter(r=>r.practice===p).reduce((a,r)=>a+r.won,0));
+  const pw=pracs.map(p=>rows.filter(r=>r.practice===p).reduce((a,r)=>a+revVal(r),0));
   const pg=pracs.map(p=>uniq(DATA.cli.filter(r=>!mkt||r.market===mkt).map(r=>r.market)).reduce((a,m)=>a+((DATA.planByPractice&&DATA.planByPractice[m]&&DATA.planByPractice[m][p])||0),0));
   CHARTS['ovPracticeChart']=new Chart(document.getElementById('ovPracticeChart'),{type:'bar',data:{labels:pracs,datasets:[{label:'Won YTD',data:pw,backgroundColor:C.blue},{label:'Annual Plan',data:pg,backgroundColor:C.lgray}]},options:{plugins:{legend:{position:'bottom'}},scales:{y:{ticks:{callback:v=>fmtK(v)}}}}});
   destroyChart('ovRegionChart');const cum=[];let run=0;
@@ -800,7 +905,9 @@ function getWinRows(){
     &&(!yr||r.year===+yr)&&(!mo||r.month===mo)&&(!rg||r.region===rg)&&(!mk||r.market===mk)
     &&(!ind||indKey(r)===ind)
     &&(!pr||r.practice===pr)&&(!pd||r.producer===pd)&&(!s||(r.company||'').toLowerCase().includes(s)))
-    .map(r=>({...r,total:r.won+r.conv}));
+    // apply the global Revenue scope (recurring/non-recurring/both) once here so every
+    // KPI, chart and table column below it stays consistent automatically
+    .map(r=>{const w=revVal(r);return {...r,won:w,total:w+r.conv};});
 }
 function renderWins(){
   let rows=getWinRows();
@@ -838,28 +945,151 @@ function renderWins(){
 function sortW(k){wSort.d=wSort.k===k?-wSort.d:-1;wSort.k=k;renderWins();}
 
 /* ---------- FORECAST & COMMIT ---------- */
-let fcSort={k:'rev',d:-1};
-function fcWindowMonths(){
-  // returns array of {mi, year} month-indexes that fall in the selected window
-  const w=document.getElementById('fcWindow').value;
-  if(w==='month')return [{mi:CUR_MONTH_IDX,year:CUR_YEAR}];
-  if(w==='next'){const mi=(CUR_MONTH_IDX+1)%12;const yr=CUR_MONTH_IDX===11?CUR_YEAR+1:CUR_YEAR;return [{mi,year:yr}];}
-  // quarter: the calendar quarter containing CUR_MONTH_IDX
-  const qStart=Math.floor(CUR_MONTH_IDX/3)*3;
-  return [0,1,2].map(o=>({mi:qStart+o,year:CUR_YEAR}));
+/* ---------- FORECAST & COMMIT: controls ---------- */
+function fcv(id,dflt){const e=document.getElementById(id);const v=e?e.value:'';return v||dflt;}
+function fcPractice(){const v=fcv('fcPractice','EB');return v==='__ALL__'?'':v;}
+function fcMk(){return fcv('fcMarket','');}
+function fcPd(){return fcv('fcProducer','');}
+function fcPeriodKey(){return fcv('fcPeriod','q');}
+function fcInclude(){return fcv('fcInclude','h');}
+
+/* ---- confidence tiers -- Projection Includes only affects THIS tab's own
+   aggregation (fcForecastParts below); the Sales Leader Input rollup (mmrRollup)
+   stays hardcoded to Committed-only so the numbers a leader already saved don't
+   silently change meaning under them when someone flips a filter on this tab. ---- */
+function fcConfNorm(c){c=String(c||'').trim().toUpperCase();return (c==='M'||c==='L')?c:'H';}
+function fcCountedTiers(){const m=fcInclude();return m==='all'?['H','M','L']:m==='hm'?['H','M']:['H'];}
+function fcConfCounts(c){return fcCountedTiers().includes(fcConfNorm(c));}
+function fcIncludeLabel(){const m=fcInclude();return m==='all'?'Committed + Probable + Uncertain':m==='hm'?'Committed + Probable':'Committed only';}
+function fcHeldLabel(){const m=fcInclude();return m==='all'?'nothing left out':m==='hm'?'Uncertain':'Probable + Uncertain';}
+
+/* ---- markets: always the individual markets, so the list matches the market filter ---- */
+function fcGroups(){
+  const all=uniq(DATA.cli.map(r=>r.market)).filter(Boolean).sort();
+  const mk=fcMk();
+  if(mk)return [{name:mk,members:[mk]}];
+  return all.map(m=>({name:m,members:[m]}));
 }
-function fcWindowLabel(){
-  const w=document.getElementById('fcWindow').value;
-  if(w==='month')return MONTHS[CUR_MONTH_IDX]+' '+CUR_YEAR;
-  if(w==='next'){const mi=(CUR_MONTH_IDX+1)%12;const yr=CUR_MONTH_IDX===11?CUR_YEAR+1:CUR_YEAR;return MONTHS[mi]+' '+yr;}
-  return 'Q'+(Math.floor(CUR_MONTH_IDX/3)+1)+' '+CUR_YEAR;
+/* ---- plan ---- */
+function fcPlanAnnual(members){
+  const pr=fcPractice();
+  return members.reduce((a,m)=>{
+    if(pr){const bp=DATA.planByPractice&&DATA.planByPractice[m];return a+((bp&&typeof bp[pr]==='number')?bp[pr]:0);}
+    return a+(marketGoal(m)||0);
+  },0);
 }
-function fcInWindow(month,year){const wm=fcWindowMonths();const mi=MONTHS.indexOf(month);return wm.some(w=>w.mi===mi&&w.year===year);}
-function fcGoalShare(){
-  // fraction of annual plan expected to fall inside the window, from the seasonal curve
-  const wm=fcWindowMonths();let lo=999,hi=-1;wm.forEach(w=>{if(w.year===CUR_YEAR){lo=Math.min(lo,w.mi);hi=Math.max(hi,w.mi);}});
-  if(hi<0)return 0;const c=DATA.regionCurve;const before=lo>0?c[lo-1]:0;return Math.max(0,c[hi]-before);
+/* monthly plan share: the plan is an annual number, spread evenly (1/12 a month),
+   the same way the Sales vs Plan report reads it. Historical seasonality lives on
+   the Historical Pacing tab -- kept separate rather than duplicated here with a
+   second, different definition of "plan due by now". */
+function fcMonthShare(){return Array(12).fill(1/12);}
+function fcPlanByMonth(members){const a=fcPlanAnnual(members);return fcMonthShare().map(s=>a*s);}
+/* ---- closed (actual) by month, for any plan year ---- */
+function fcClosedByMonthYear(members,year){
+  const pr=fcPractice(),pd=fcPd(),out=Array(12).fill(0);
+  DATA.cli.forEach(r=>{
+    if(r.year!==year)return;
+    if(!members.includes(r.market))return;
+    if(pr&&r.practice!==pr)return;
+    if(pd&&r.producer!==pd)return;
+    const mi=MONTHS.indexOf(r.month);if(mi<0)return;
+    out[mi]+=(r.won||0);
+  });
+  return out;
 }
+function fcClosedByMonth(members){return fcClosedByMonthYear(members,CUR_YEAR);}
+/* ---- forecast by month, from the Sales Leader Input form open in THIS browser ----
+   Scoped deliberately: our shared cross-leader store is SharePoint, not localStorage,
+   and there is no read-back from SharePoint yet (live-connect.js only writes). Scanning
+   localStorage the way a standalone/offline build could would only surface whichever
+   single market's form this browser last touched, while looking like a region-wide
+   number -- worse than not having it. So this reads the live, currently-open MMR deal
+   list only. A true region-wide roll-up needs a Graph read-back call as a follow-up. */
+function fcForecastParts(members){
+  const pr=fcPractice(),pd=fcPd();
+  const counted=Array(12).fill(0),held=Array(12).fill(0);
+  let nCounted=0,nHeld=0;
+  if(document.getElementById('mmrDealBody')){
+    mmrGatherDeals().forEach(d=>{
+      if(!d.deal&&!num(d.amt))return;
+      const {mi,year}=mmrParseClose(d.close);
+      if(mi==null||isNaN(mi)||mi<0||year!==CUR_YEAR)return;
+      if(mi<=CUR_MONTH_IDX)return; // the as-of month and everything before it are closed
+      const mkt=producerMarketOf(d.producer)||mmrSelectedMarket();
+      if(mkt&&!members.includes(mkt))return;
+      if(pd&&d.producer!==pd)return;
+      if(pr&&d.producer&&producerPractice(d.producer)&&producerPractice(d.producer)!==pr)return;
+      const amt=num(d.amt);if(!amt)return;
+      if(fcConfCounts(d.conf)){counted[mi]+=amt;nCounted++;}else{held[mi]+=amt;nHeld++;}
+    });
+    // "Other expected revenue" only ever applies to the next open month (see MMR Step 2),
+    // and always counts as committed -- consistent with mmrComputeAddl().
+    if(!pd&&members.includes(mmrSelectedMarket()||'')){
+      const otherExpEl=document.getElementById('mmrOtherExp');
+      const otherExp=otherExpEl?num(otherExpEl.value):0;
+      if(otherExp&&CUR_MONTH_IDX<11)counted[CUR_MONTH_IDX+1]+=otherExp;
+    }
+  }
+  return {counted,held,nCounted,nHeld};
+}
+/* ---- total expected = closed + counted forecast (forecast only counts from the as-of month on) ---- */
+function fcSeries(members){
+  const plan=fcPlanByMonth(members),closed=fcClosedByMonth(members);
+  const f=fcForecastParts(members);
+  const fc=f.counted,held=f.held;
+  const proj=[];for(let i=0;i<12;i++)proj.push(closed[i]+(i>CUR_MONTH_IDX?fc[i]:0));
+  return {plan,closed,fc,held,proj,nCounted:f.nCounted,nHeld:f.nHeld,annualPlan:fcPlanAnnual(members)};
+}
+/* ================= PERIODS ================= */
+function fcRng(a,b){const o=[];for(let i=Math.max(0,a);i<=Math.min(b,11);i++)o.push(i);return o;}
+function fcQLabel(mi){return 'Q'+(Math.floor(mi/3)+1);}
+/* note that describes which months are actual and which are projected */
+function fcNoteFor(months){
+  if(!months.length)return 'outside the plan year';
+  const FB=CUR_MONTH_IDX+1;
+  const act=months.filter(i=>i<FB),prj=months.filter(i=>i>=FB);
+  const span=a=>a.length?(a.length===1?MONTHS[a[0]]:MONTHS[a[0]]+'\u2013'+MONTHS[a[a.length-1]]):'';
+  if(!prj.length)return span(act)+' \u2014 all months already closed';
+  if(!act.length)return span(prj)+' \u2014 all months still open';
+  return span(act)+' closed + '+span(prj)+' still open';
+}
+function fcPeriodDefs(){
+  const qs=Math.floor(CUR_MONTH_IDX/3)*3, nqs=qs+3, thru=CUR_MONTH_IDX;
+  const nm=CUR_MONTH_IDX+1;
+  const defs=[
+    {key:'month',     label:'This Month',    title:MONTHS[CUR_MONTH_IDX]+' '+CUR_YEAR,                     months:[CUR_MONTH_IDX]},
+    {key:'nextmonth', label:'Next Month',    title:(nm<=11?MONTHS[nm]+' '+CUR_YEAR:'Jan '+(CUR_YEAR+1)),   months:nm<=11?[nm]:[]},
+    {key:'q',         label:'This Quarter',  title:fcQLabel(CUR_MONTH_IDX)+' '+CUR_YEAR,                   months:fcRng(qs,qs+2)},
+    {key:'nq',        label:'Next Quarter',  title:(nqs<=11?fcQLabel(nqs)+' '+CUR_YEAR:'Q1 '+(CUR_YEAR+1)),months:nqs<=11?fcRng(nqs,nqs+2):[]},
+    {key:'ytd',       label:'Year to Date',      title:'Jan\u2013'+MONTHS[thru]+' '+CUR_YEAR,             months:fcRng(0,thru)},
+    /* Remaining Months = the months still open (after the as-of month).
+       Full Year = all twelve. Different questions: "what is left to get" vs "how the year lands". */
+    {key:'rest',      label:'Remaining Months', title:(nm<=11?MONTHS[nm]+'\u2013Dec '+CUR_YEAR:'no months left in '+CUR_YEAR), months:nm<=11?fcRng(nm,11):[]},
+    {key:'fy',        label:'Full Year',        title:'Jan\u2013Dec '+CUR_YEAR,                             months:fcRng(0,11)}
+  ];
+  defs.forEach(d=>{d.note=fcNoteFor(d.months);});
+  return defs;
+}
+function fcFocus(){const k=fcPeriodKey(),defs=fcPeriodDefs();return defs.find(d=>d.key===k)||defs[2];}
+function fcSum(arr,months){return months.reduce((a,i)=>a+(arr[i]||0),0);}
+/* forecast inside a period only counts from the as-of month forward */
+function fcSumFwd(arr,months){return months.filter(i=>i>CUR_MONTH_IDX).reduce((a,i)=>a+(arr[i]||0),0);}
+/* ---- variance cell ---- */
+function fcVar(v){const c=v>=0?'var(--green)':'var(--orange)';const s=v>=0?'+':'\u2212';
+  return `<b style="color:${c}">${s}${fmtK(Math.abs(v))}</b>`;}
+let FC_CHART_VIEW='market';
+function fcSetChart(v){FC_CHART_VIEW=v;
+  document.querySelectorAll('#fcChartSeg .fc-segbtn').forEach(b=>b.classList.toggle('active',b.getAttribute('data-v')===v));
+  renderForecast();}
+/* ---- MMR compatibility shims ----
+   mmrRollup()/mmrComputeAddl() (built in the MMR rework) still call these two by
+   name to stay in sync with whatever Focus Period is selected here; kept as thin
+   wrappers over the new period system instead of touching that already-validated
+   code. */
+function fcWindowLabel(){return fcFocus().title;}
+function fcInWindow(month,year){if(year!==CUR_YEAR)return false;return fcFocus().months.includes(MONTHS.indexOf(month));}
+function fcInitControls(){/* all period controls are self-contained now */}
+
 /* ---------- MONTHLY MARKET REVIEW (leader input) ---------- */
 const MMR_PREFIX='odMMR_v1::';
 function mmrSelectedMarket(){
@@ -925,7 +1155,12 @@ function mmrWinDealOptions(producer,sel){
   return h;
 }
 /* ---- gather / persist ---- */
-function mmrGatherHz(bodyId){const out=[];document.querySelectorAll('#'+bodyId+' tr').forEach(tr=>{
+/* ---- Step 2: single flat deal list (replaces the old 3 separate horizon
+   tables). Each deal has its own Expected Close date; which "bucket" it
+   falls into for the Month-by-Month table and for the SharePoint Horizon
+   column is derived from that date, not from which table the user typed it
+   into -- see mmrBucketFor(). ---- */
+function mmrGatherDeals(){const out=[];document.querySelectorAll('#mmrDealBody tr').forEach(tr=>{
     const sels=tr.querySelectorAll('select');
     const deal=sels[0]?sels[0].value:'';
     const producer=sels[1]?sels[1].value:'';
@@ -933,16 +1168,41 @@ function mmrGatherHz(bodyId){const out=[];document.querySelectorAll('#'+bodyId+'
     const amtI=tr.querySelector('.mmr-fc'),closeI=tr.querySelector('.mmr-close'),nt=tr.querySelector('.mmr-qtr-notes');
     out.push({deal,producer,amt:amtI?amtI.value:'',close:closeI?closeI.value:'',conf,notes:nt?nt.value:''});
   });return out;}
-function mmrSumArr(arr){let t=0;(arr||[]).forEach(d=>t+=num(d.amt));return t;}
+function mmrSumArr(arr,confFilter){let t=0;(arr||[]).forEach(d=>{if(!confFilter||d.conf===confFilter)t+=num(d.amt);});return t;}
+// Which Month-by-Month bucket (and SharePoint Horizon label) a deal's own
+// Expected Close date falls into, relative to the CURRENT as-of month --
+// same 3 labels the SharePoint log has always used, plus "Later" (free text,
+// no schema change) for anything beyond next month.
+function mmrBucketFor(mi,year){
+  if(isNaN(mi))return 'Later';
+  const ni=(CUR_MONTH_IDX+1)%12,ny=CUR_MONTH_IDX===11?CUR_YEAR+1:CUR_YEAR;
+  const qEnd=(Math.floor(CUR_MONTH_IDX/3)*3)+2;
+  if(mi===CUR_MONTH_IDX&&year===CUR_YEAR)return 'This Month';
+  if(year===CUR_YEAR&&mi>CUR_MONTH_IDX&&mi<=qEnd)return 'Quarter End';
+  if(mi===ni&&year===ny)return 'Next Month';
+  return 'Later';
+}
+function mmrParseClose(closeStr){
+  // "Mon YYYY" free-text field -> {mi, year}; tolerant of blank/garbage input
+  const parts=(closeStr||'').trim().split(/\s+/);
+  const mi=MONTHS.indexOf(parts[0]);const year=parseInt(parts[1],10);
+  return {mi, year:isNaN(year)?null:year};
+}
 function mmrComputeAddl(s){
-  // additional confident-to-close = sum of the chosen horizon's deal amounts
-  const hz=s.commitHz||'this';
-  const tThis=mmrSumArr(s.dThis),tQtr=mmrSumArr(s.dQtr),tNext=mmrSumArr(s.dNext);
-  return hz==='qtr'?(tThis+tQtr):hz==='next'?tNext:tThis;
+  // "Committed deals closing [Focus Period]" + Other Expected Revenue --
+  // uses the SAME Focus Period window as the Forecast & Commit filters above,
+  // via fcInWindow(), so Section 1 always agrees with the KPIs beside it.
+  let t=0;
+  (s.deals||[]).forEach(d=>{
+    if(d.conf!=='H')return; // only Committed counts toward the forecast
+    const {mi,year}=mmrParseClose(d.close);
+    if(mi==null||mi<0||year==null)return;
+    if(fcInWindow(MONTHS[mi],year))t+=num(d.amt);
+  });
+  return t+num(s.otherExp);
 }
 function mmrGather(){
-  const dThis=mmrGatherHz('mmrThisBody'),dQtr=mmrGatherHz('mmrQtrBody'),dNext=mmrGatherHz('mmrNextBody');
-  const hzSel=document.getElementById('mmrCommitHz');const commitHz=hzSel?hzSel.value:'this';
+  const deals=mmrGatherDeals();
   const prod=[];document.querySelectorAll('#mmrProdBody tr').forEach(tr=>{
     const i=tr.querySelectorAll('input,select');
     if(i.length>=4)prod.push({producer:i[0].value,gap:i[1].value,plan:i[2].value,outcome:i[3].value});
@@ -951,11 +1211,12 @@ function mmrGather(){
     const i=tr.querySelectorAll('input,select,textarea');
     if(i.length>=6)wins.push({producer:i[0].value,deal:i[1].value,teeup:i[2].value,advance:i[3].value,client:i[4].value,team:i[5].value});
   });
+  const otherExpEl=document.getElementById('mmrOtherExp');
   const st={
     market:mmrSelectedMarket(),
-    leader:document.getElementById('mmrLeader').value,
-    commitHz,
-    dThis, dQtr, dNext, prod, wins,
+    leader:(document.getElementById('mmrLeader')||{}).value||'',
+    deals, prod, wins,
+    otherExp:otherExpEl?otherExpEl.value:'',
     nextOpps:document.getElementById('mmrNextOpps').value
   };
   st.addl=mmrComputeAddl(st);   // derived rollup, stored for the KPI render
@@ -983,18 +1244,29 @@ function mmrClear(){
   if(!confirm('Clear the saved Monthly Review for '+mmrLabel()+' ('+MONTHS[CUR_MONTH_IDX]+' '+CUR_YEAR+')?'))return;
   localStorage.removeItem(mmrKey());mmrInitForm();renderForecast();
 }
+function mmrClearDeals(){
+  if(!confirm('Clear every deal from this list? This does not remove anything from CRM.'))return;
+  const b=document.getElementById('mmrDealBody');b.innerHTML='';b.insertAdjacentHTML('beforeend',mmrRow({}));
+  mmrRollup();
+}
 function mmrMarketChange(){mmrInitForm();renderForecast();}
-/* ---- Section 2 rows: one deal = one horizon, single Amount + Expected Close ---- */
-const MMR_HZ={this:{body:'mmrThisBody'},qtr:{body:'mmrQtrBody'},next:{body:'mmrNextBody'}};
-function mmrRow(hz,d){d=d||{};const ev=v=>(v===undefined||v===null)?'':v;return `<tr data-hz="${hz}">
+/* ---- Step 1 rows: one flat list; each deal carries its own Expected Close date ---- */
+const MMR_CONF_LABEL={H:'Committed',M:'Probable',L:'Uncertain'};
+function mmrRow(d){d=d||{};const ev=v=>(v===undefined||v===null)?'':v;return `<tr>
   <td><select class="mmr-deal" onchange="mmrDealPick(this)">${mmrDealOptions(d.deal,d.producer)}</select></td>
   <td><select class="mmr-prod" onchange="mmrProdPick(this)">${mmrProducerOptions(d.producer)}</select></td>
+  <td><span class="mmr-market muted">&mdash;</span></td>
   <td><input type="number" min="0" step="1000" class="mmr-fc" value="${ev(d.amt)}" placeholder="$" oninput="mmrRollup()"></td>
-  <td><input type="text" class="mmr-close" value="${(d.close||'').replace(/"/g,'&quot;')}" placeholder="Mon YYYY" style="text-align:center"></td>
-  <td><select><option value=""${!d.conf?' selected':''}></option><option ${d.conf==='H'?'selected':''}>H</option><option ${d.conf==='M'?'selected':''}>M</option><option ${d.conf==='L'?'selected':''}>L</option></select></td>
+  <td><input type="text" class="mmr-close" value="${(d.close||'').replace(/"/g,'&quot;')}" placeholder="Mon YYYY" style="text-align:center" onchange="mmrRollup()"><span class="mmr-pastdue-flag flag red" style="margin-left:4px;display:none">PAST DUE</span></td>
+  <td><select class="mmr-conf-select ${d.conf?'mmr-conf-'+d.conf:''}" onchange="this.className='mmr-conf-select '+(this.value?'mmr-conf-'+this.value:'');mmrRollup()">
+    <option value=""${!d.conf?' selected':''}>&mdash;</option>
+    <option value="H"${d.conf==='H'?' selected':''}>Committed</option>
+    <option value="M"${d.conf==='M'?' selected':''}>Probable</option>
+    <option value="L"${d.conf==='L'?' selected':''}>Uncertain</option>
+  </select></td>
   <td><textarea class="mmr-qtr-notes" rows="2" placeholder="What's needed to close, blockers, next steps&hellip;">${(d.notes||'').replace(/</g,'&lt;')}</textarea></td>
   <td><button class="mmr-delrow" onclick="this.closest('tr').remove();mmrRollup()" title="remove">&times;</button></td></tr>`;}
-function mmrAddRow(hz,d){const b=document.getElementById(MMR_HZ[hz].body);if(b)b.insertAdjacentHTML('beforeend',mmrRow(hz,d));}
+function mmrAddRow(d){const b=document.getElementById('mmrDealBody');if(b)b.insertAdjacentHTML('beforeend',mmrRow(d));}
 function mmrDealPick(selEl){
   // auto-fill producer, amount (deal value), and expected close date from CRM
   const opt=selEl.options[selEl.selectedIndex];if(!opt)return;
@@ -1030,7 +1302,7 @@ function mmrProdRow(d){d=d||{};return `<tr>
   <td><input type="text" value="${(d.plan||'').replace(/"/g,'&quot;')}" placeholder="Coaching & support plan"></td>
   <td><input type="text" value="${(d.outcome||'').replace(/"/g,'&quot;')}" placeholder="Target outcome"></td>
   <td><button class="mmr-delrow" onclick="this.closest('tr').remove()" title="remove">&times;</button></td></tr>`;}
-/* ---- Section 3b: recent wins playbook ---- */
+/* ---- Section 4: recent wins playbook ---- */
 function mmrWinRow(d){d=d||{};return `<tr>
   <td><select class="mmr-win-prod" onchange="mmrWinProducerPick(this)">${mmrWinProducerOptions(d.producer)}</select></td>
   <td><select class="mmr-win-deal" onchange="mmrWinDealPick(this)">${mmrWinDealOptions(d.producer,d.deal)}</select></td>
@@ -1061,134 +1333,138 @@ function mmrWinDealPick(selEl){
 function mmrAddProdRow(d){document.getElementById('mmrProdBody').insertAdjacentHTML('beforeend',mmrProdRow(d));}
 function mmrAddWinRow(d){document.getElementById('mmrWinBody').insertAdjacentHTML('beforeend',mmrWinRow(d));}
 /* ---- three-horizon CRM (weighted) for the selected market ---- */
-function mmrCrmHorizons(){
-  const mk=mmrSelectedMarket();
-  const ni=(CUR_MONTH_IDX+1)%12,ny=CUR_MONTH_IDX===11?CUR_YEAR+1:CUR_YEAR;
-  const qEnd=(Math.floor(CUR_MONTH_IDX/3)*3)+2; // last month index of current quarter
-  let cThis=0,cQtr=0,cNext=0;
-  DATA.pipe.filter(d=>(!mk||d.market===mk)).forEach(d=>{
-    const mi=MONTHS.indexOf(d.month),w=d.rev*(STAGE_P[d.stage]||0);
-    if(mi===CUR_MONTH_IDX&&d.year===CUR_YEAR)cThis+=w;                       // this month
-    if(d.year===CUR_YEAR&&mi>=CUR_MONTH_IDX&&mi<=qEnd)cQtr+=w;               // remainder of quarter
-    if(mi===ni&&d.year===ny)cNext+=w;                                        // next month
-  });
-  return {cThis,cQtr,cNext};
-}
-/* ---- roll up the three forecast columns + compute per-horizon delta vs CRM ---- */
-function mmrSumBody(id){let t=0,n=0;document.querySelectorAll('#'+id+' tr').forEach(tr=>{const a=tr.querySelector('.mmr-fc');t+=num(a&&a.value);if(tr.querySelector('select').value)n++;});return {t,n};}
-function mmrLiveAddl(){
-  // additional confident-to-close from current DOM Step 2 tables, per chosen horizon
-  const hzSel=document.getElementById('mmrCommitHz');const hz=hzSel?hzSel.value:'this';
-  const tThis=mmrSumBody('mmrThisBody').t,tQtr=mmrSumBody('mmrQtrBody').t,tNext=mmrSumBody('mmrNextBody').t;
-  return hz==='qtr'?(tThis+tQtr):hz==='next'?tNext:tThis;
-}
+/* ---- Month-by-Month table + Section 1 rollup, built from the single flat deal list ---- */
 function mmrRollup(){
-  const sThis=mmrSumBody('mmrThisBody'),sQtr=mmrSumBody('mmrQtrBody'),sNext=mmrSumBody('mmrNextBody');
-  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=fmtK(v);};
-  set('mmrTotThis',sThis.t);set('mmrTotQtr',sQtr.t);set('mmrTotNext',sNext.t);
-  const sub=(id,n)=>{const el=document.getElementById(id);if(el)el.textContent=n?(n+' deal'+(n>1?'s':'')):'';};
-  sub('mmrThisSub',sThis.n);sub('mmrQtrSub',sQtr.n);sub('mmrNextSub',sNext.n);
-  const crm=mmrCrmHorizons();
-  set('mmrCrmThis',crm.cThis);set('mmrCrmQtr',crm.cQtr);set('mmrCrmNext',crm.cNext);
-  const delta=(id,fc,cv,any)=>{const el=document.getElementById(id);if(!el)return;
-    if(!any){el.innerHTML='<b>&mdash;</b>';return;}
-    const diff=fc-cv,sign=diff>=0?'+':'\u2212',col=diff>=0?'var(--green)':'var(--orange)';
-    el.innerHTML=`<b style="color:${col}">${sign}${fmtK(Math.abs(diff))}</b>`;};
-  delta('mmrDeltaThis',sThis.t,crm.cThis,sThis.t>0);
-  delta('mmrDeltaQtr',sQtr.t,crm.cQtr,sQtr.t>0);
-  delta('mmrDeltaNext',sNext.t,crm.cNext,sNext.t>0);
-  // Section 1: additional confident-to-close auto-rolls from the chosen horizon's deals
-  const hzSel=document.getElementById('mmrCommitHz');
-  const hz=hzSel?hzSel.value:'this';
-  // Quarter End commits the full quarter (this month + rest of quarter); This/Next commit their own table
-  const addl=hz==='qtr'?(sThis.t+sQtr.t):hz==='next'?sNext.t:sThis.t;
-  const hint={this:'deals you expect to close this month',qtr:'all deals closing this quarter (this month + rest of quarter)',next:'deals you expect to close next month'}[hz];
-  const hintEl=document.getElementById('mmrHzHint');if(hintEl)hintEl.textContent=hint;
-  const addlEl=document.getElementById('mmrAddl');if(addlEl)addlEl.textContent=fmtK(addl);
-  // live-update Total Committed + % to goal so the leader sees it without saving
+  const deals=mmrGatherDeals();
+  const buckets=['This Month','Quarter End','Next Month','Later'];
+  const sums={};buckets.forEach(b=>sums[b]={committed:0,other:0,all:0,n:0});
+  deals.forEach(d=>{
+    if(!d.deal&&!num(d.amt))return; // skip fully-empty rows
+    const {mi,year}=mmrParseClose(d.close);
+    const b=mmrBucketFor(mi,year);
+    const amt=num(d.amt);
+    sums[b].n++; sums[b].all+=amt;
+    if(d.conf==='H')sums[b].committed+=amt; else sums[b].other+=amt;
+  });
+  // Per-row Market (derived from the row's own Producer pick) + PAST DUE flag
+  // (Expected Close already gone by, relative to the current Actuals-Through month).
+  document.querySelectorAll('#mmrDealBody tr').forEach(tr=>{
+    const prodSel=tr.querySelector('.mmr-prod'),mktEl=tr.querySelector('.mmr-market');
+    if(mktEl)mktEl.textContent=(prodSel&&prodSel.value)?(producerMarketOf(prodSel.value)||'\u2014'):'\u2014';
+    const closeI=tr.querySelector('.mmr-close'),flagEl=tr.querySelector('.mmr-pastdue-flag');
+    if(closeI&&flagEl){
+      const {mi,year}=mmrParseClose(closeI.value);
+      const past=(mi!=null&&!isNaN(mi)&&year!=null)&&((year<CUR_YEAR)||(year===CUR_YEAR&&mi<CUR_MONTH_IDX));
+      flagEl.style.display=past?'inline-block':'none';
+    }
+  });
+  // Deal-table footer: same Committed / Probable+Uncertain / Everything split as the
+  // Month-by-Month table below, but totaled across every deal regardless of close date.
+  const footTotals={committed:0,committedN:0,other:0,otherN:0,all:0,allN:0};
+  deals.forEach(d=>{
+    if(!d.deal&&!num(d.amt))return;
+    const amt=num(d.amt);
+    footTotals.all+=amt;footTotals.allN++;
+    if(d.conf==='H'){footTotals.committed+=amt;footTotals.committedN++;}
+    else{footTotals.other+=amt;footTotals.otherN++;}
+  });
+  const df=document.getElementById('mmrDealFoot');
+  if(df){
+    df.innerHTML=`<tr class="mmr-total-row"><td colspan="3"><b>Counts in Total Expected</b> <span class="muted">(${footTotals.committedN} committed)</span></td><td style="text-align:right"><b>${fmtK(footTotals.committed)}</b></td><td colspan="3"></td></tr>`+
+      `<tr><td colspan="3">Not included in forecast <span class="muted">(Probable + Uncertain, ${footTotals.otherN})</span></td><td style="text-align:right">${fmtK(footTotals.other)}</td><td colspan="3"></td></tr>`+
+      `<tr><td colspan="3"><b>Everything you listed</b></td><td style="text-align:right"><b>${fmtK(footTotals.all)}</b> <span class="muted">(${footTotals.allN})</span></td><td colspan="3"></td></tr>`;
+  }
+  // Month-by-Month table
+  const mb=document.getElementById('mmrMonthBody');
+  if(mb){
+    const label={'This Month':MONTHS[CUR_MONTH_IDX]+' '+CUR_YEAR+' (This Month)','Quarter End':'Rest of Quarter','Next Month':(()=>{const ni=(CUR_MONTH_IDX+1)%12,ny=CUR_MONTH_IDX===11?CUR_YEAR+1:CUR_YEAR;return MONTHS[ni]+' '+ny+' (Next Month)';})(),'Later':'Beyond Next Month'};
+    let h='';
+    buckets.forEach(b=>{const s=sums[b];if(!s.n&&b==='Later')return; // hide the Later row when empty
+      h+=`<tr><td><b>${label[b]}</b></td><td style="text-align:right">${fmtK(s.committed)}</td><td style="text-align:right">${fmtK(s.other)}</td><td style="text-align:right"><b>${fmtK(s.all)}</b> <span class="muted">(${s.n})</span></td></tr>`;});
+    mb.innerHTML=h||'<tr><td colspan="4" class="muted" style="padding:14px">No deals listed yet.</td></tr>';
+  }
+  // Section 1 -- follows the Forecast tab's own Focus Period, not a hardcoded month
+  const periodLabel=fcWindowLabel();
+  ['mmrPeriodLabel','mmrPeriodLabel2','mmrPeriodLabel3','mmrPeriodLabel4'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=periodLabel;});
+  const addl=mmrComputeAddl({deals,otherExp:(document.getElementById('mmrOtherExp')||{}).value});
+  const addlEl=document.getElementById('mmrAddl');if(addlEl)addlEl.textContent=fmtK(addl-num((document.getElementById('mmrOtherExp')||{}).value));
   const booked=window._mmrBooked||0,pgoal=window._mmrPeriodGoal||0;
   const totEl=document.getElementById('mmrTotal');if(totEl)totEl.innerHTML='<b>'+fmt(booked+addl)+'</b>';
   const pctEl=document.getElementById('mmrPct');if(pctEl)pctEl.innerHTML=pgoal?(Math.round((booked+addl)/pgoal*100)+'% <span class="muted">of '+fmtK(pgoal)+'</span>'):'&mdash;';
 }
+function mmrLiveAddl(){
+  // used by renderForecast() for the Forecast & Commit KPIs -- live from the DOM, no save required
+  return mmrComputeAddl({deals:mmrGatherDeals(),otherExp:(document.getElementById('mmrOtherExp')||{}).value});
+}
+function mmrLeaderPick(){/* placeholder for symmetry with mmrMarketChange; nothing else depends on the leader value changing live */}
 function mmrInitForm(){
   // populate market dropdown from CRM markets, preserving current selection / defaulting to fcMarket
   const mSel=document.getElementById('mmrMarket');
+  let want='';
   if(mSel&&mSel.tagName==='SELECT'){
     const markets=uniq(DATA.cli.map(r=>r.market));
-    const want=mSel.value||document.getElementById('fcMarket').value||'';
+    want=mSel.value||document.getElementById('fcMarket').value||'';
     mSel.innerHTML='<option value="">All Markets</option>'+markets.map(m=>`<option${want===m?' selected':''}>${m}</option>`).join('');
     if(want&&[...mSel.options].some(o=>o.value===want))mSel.value=want;
   }
   const s=mmrLoad();
   document.getElementById('mmrMonth').value=MONTHS[CUR_MONTH_IDX]+' '+CUR_YEAR;
-  document.getElementById('mmrLeader').value=s.leader||'';
-  const hzSel=document.getElementById('mmrCommitHz');if(hzSel)hzSel.value=s.commitHz||'this';
-  document.getElementById('mmrNextOpps').value=s.nextOpps||'';
-  // migrate any legacy single-table data into the three horizon buckets
-  let dThis=s.dThis,dQtr=s.dQtr,dNext=s.dNext;
-  if(!dThis&&!dQtr&&!dNext&&s.qtr&&s.qtr.length){
-    dThis=[];dQtr=[];dNext=[];
-    s.qtr.forEach(r=>{
-      if(num(r.fcThis))dThis.push({deal:r.deal,producer:r.producer,amt:r.fcThis,conf:r.conf,notes:r.notes});
-      if(num(r.fcQtr))dQtr.push({deal:r.deal,producer:r.producer,amt:r.fcQtr,conf:r.conf,notes:r.notes});
-      if(num(r.fcNext))dNext.push({deal:r.deal,producer:r.producer,amt:r.fcNext,conf:r.conf,notes:r.notes});
-    });
+  // Sales Leader dropdown -- sourced from each producer's own BR Sales Leader
+  // field for the selected market (falls back to every leader in the region
+  // if the market has none, e.g. "All Markets").
+  const lSel=document.getElementById('mmrLeader');
+  if(lSel){
+    const mk=want;
+    let leaders=uniq(DATA.producers.filter(p=>(!mk||p.market===mk)).map(p=>p.leader));
+    if(!leaders.length)leaders=uniq(DATA.producers.map(p=>p.leader));
+    const wantLeader=s.leader||'';
+    lSel.innerHTML='<option value="">Select&hellip;</option>'+leaders.map(n=>`<option${wantLeader===n?' selected':''}>${n}</option>`).join('');
+    if(wantLeader&&[...lSel.options].some(o=>o.value===wantLeader))lSel.value=wantLeader;
   }
-  const fill=(bodyId,hz,arr)=>{const b=document.getElementById(bodyId);b.innerHTML='';(arr&&arr.length?arr:[{},{}]).forEach(d=>b.insertAdjacentHTML('beforeend',mmrRow(hz,d)));};
-  fill('mmrThisBody','this',dThis);
-  fill('mmrQtrBody','qtr',dQtr);
-  fill('mmrNextBody','next',dNext);
+  document.getElementById('mmrNextOpps').value=s.nextOpps||'';
+  const otherExpEl=document.getElementById('mmrOtherExp');if(otherExpEl)otherExpEl.value=s.otherExp||'';
+  // migrate legacy saved data (the old 3-table dThis/dQtr/dNext shape, or the
+  // even older single "qtr" shape) into one flat deals list so nothing
+  // stored in a browser before this redesign silently disappears
+  let deals=s.deals;
+  if(!deals||!deals.length){
+    deals=[];
+    ['dThis','dQtr','dNext'].forEach(k=>(s[k]||[]).forEach(d=>{if(d.deal||num(d.amt))deals.push(d);}));
+    if(!deals.length&&s.qtr&&s.qtr.length){
+      s.qtr.forEach(r=>{
+        if(num(r.fcThis))deals.push({deal:r.deal,producer:r.producer,amt:r.fcThis,conf:r.conf,notes:r.notes,close:MONTHS[CUR_MONTH_IDX]+' '+CUR_YEAR});
+        if(num(r.fcQtr))deals.push({deal:r.deal,producer:r.producer,amt:r.fcQtr,conf:r.conf,notes:r.notes,close:''});
+        if(num(r.fcNext))deals.push({deal:r.deal,producer:r.producer,amt:r.fcNext,conf:r.conf,notes:r.notes,close:''});
+      });
+    }
+  }
+  const db=document.getElementById('mmrDealBody');db.innerHTML='';
+  (deals.length?deals:[{},{}]).forEach(d=>db.insertAdjacentHTML('beforeend',mmrRow(d)));
   const pb=document.getElementById('mmrProdBody');pb.innerHTML='';
   (s.prod&&s.prod.length?s.prod:[{},{}]).forEach(d=>pb.insertAdjacentHTML('beforeend',mmrProdRow(d)));
   const wb=document.getElementById('mmrWinBody');if(wb){wb.innerHTML='';
     (s.wins&&s.wins.length?s.wins:[{},{}]).forEach(d=>wb.insertAdjacentHTML('beforeend',mmrWinRow(d)));}
   mmrRollup();
 }
-function mmrPrefillHorizons(){
-  // seed Step 2 by routing each open CRM deal into exactly ONE horizon table by its close date
+function mmrPullDeals(){
+  // single CRM pull for the whole flat list (replaces the old per-horizon
+  // Prefill buttons) -- threshold now comes from the mmrMinStage selector
+  // instead of being hardcoded, same confidence mapping as before.
   const mk=mmrSelectedMarket();
-  const ni=(CUR_MONTH_IDX+1)%12,ny=CUR_MONTH_IDX===11?CUR_YEAR+1:CUR_YEAR;
-  const qEnd=(Math.floor(CUR_MONTH_IDX/3)*3)+2; // last month index of current quarter
-  const bThis=document.getElementById('mmrThisBody'),bQtr=document.getElementById('mmrQtrBody'),bNext=document.getElementById('mmrNextBody');
-  bThis.innerHTML='';bQtr.innerHTML='';bNext.innerHTML='';
-  let rows=DATA.pipe.filter(d=>(!mk||d.market===mk)&&d.company&&(STAGE_P[d.stage]||0)>=0.5);
+  const minStage=+((document.getElementById('mmrMinStage')||{}).value||0.75);
+  const body=document.getElementById('mmrDealBody');if(!body)return;
+  let rows=DATA.pipe.filter(d=>(!mk||d.market===mk)&&d.company&&(STAGE_P[d.stage]||0)>=minStage);
   rows=rows.sort((a,b)=>(STAGE_P[b.stage]||0)-(STAGE_P[a.stage]||0));
-  let nThis=0,nQtr=0,nNext=0;
+  body.innerHTML='';
   rows.forEach(d=>{
     const mi=MONTHS.indexOf(d.month);
-    const o={deal:d.company,producer:d.producer,amt:d.rev,close:MONTHS[mi]+' '+d.year,
+    const o={deal:d.company,producer:d.producer,amt:d.rev,close:(mi>=0?MONTHS[mi]+' '+d.year:''),
              conf:(STAGE_P[d.stage]>=0.9?'H':STAGE_P[d.stage]>=0.75?'M':'L')};
-    if(mi===CUR_MONTH_IDX&&d.year===CUR_YEAR){bThis.insertAdjacentHTML('beforeend',mmrRow('this',o));nThis++;}
-    else if(d.year===CUR_YEAR&&mi>CUR_MONTH_IDX&&mi<=qEnd){bQtr.insertAdjacentHTML('beforeend',mmrRow('qtr',o));nQtr++;}
-    else if(mi===ni&&d.year===ny){bNext.insertAdjacentHTML('beforeend',mmrRow('next',o));nNext++;}
+    body.insertAdjacentHTML('beforeend',mmrRow(o));
   });
-  if(!nThis)bThis.insertAdjacentHTML('beforeend',mmrRow('this',{}));
-  if(!nQtr)bQtr.insertAdjacentHTML('beforeend',mmrRow('qtr',{}));
-  if(!nNext)bNext.insertAdjacentHTML('beforeend',mmrRow('next',{}));
-  mmrRollup();
-}
-function mmrPrefillHorizon(hz){
-  // pull open CRM deals for ONE horizon only, replacing just that horizon's table
-  const mk=mmrSelectedMarket();
-  const ni=(CUR_MONTH_IDX+1)%12,ny=CUR_MONTH_IDX===11?CUR_YEAR+1:CUR_YEAR;
-  const qEnd=(Math.floor(CUR_MONTH_IDX/3)*3)+2; // last month index of current quarter
-  const body=document.getElementById(MMR_HZ[hz].body);
-  if(!body)return;
-  let rows=DATA.pipe.filter(d=>(!mk||d.market===mk)&&d.company&&(STAGE_P[d.stage]||0)>=0.5);
-  rows=rows.sort((a,b)=>(STAGE_P[b.stage]||0)-(STAGE_P[a.stage]||0));
-  const match=d=>{const mi=MONTHS.indexOf(d.month);
-    if(hz==='this')return mi===CUR_MONTH_IDX&&d.year===CUR_YEAR;
-    if(hz==='qtr') return d.year===CUR_YEAR&&mi>CUR_MONTH_IDX&&mi<=qEnd;
-    if(hz==='next')return mi===ni&&d.year===ny;
-    return false;};
-  const hits=rows.filter(match);
-  body.innerHTML='';
-  let n=0;
-  hits.forEach(d=>{const mi=MONTHS.indexOf(d.month);
-    const o={deal:d.company,producer:d.producer,amt:d.rev,close:MONTHS[mi]+' '+d.year,
-             conf:(STAGE_P[d.stage]>=0.9?'H':STAGE_P[d.stage]>=0.75?'M':'L')};
-    body.insertAdjacentHTML('beforeend',mmrRow(hz,o));n++;});
-  if(!n)body.insertAdjacentHTML('beforeend',mmrRow(hz,{}));
+  if(!rows.length)body.insertAdjacentHTML('beforeend',mmrRow({}));
+  const msg=document.getElementById('mmrPullMsg');
+  if(msg){msg.textContent=rows.length?`Pulled ${rows.length} open deal${rows.length>1?'s':''} from CRM (${Math.round(minStage*100)}%+ stage).`:`No ${Math.round(minStage*100)}%+ open deals found for this market.`;setTimeout(()=>{msg.textContent='';},5000);}
   mmrRollup();
 }
 function mmrPrefillProducers(){
@@ -1220,32 +1496,27 @@ function mmrPrefillWins(){
 function mmrRenderSummary(){
   const s=mmrLoad();
   const card=document.getElementById('mmrSummaryCard');
-  const anyHz=a=>(a||[]).some(d=>d.deal||d.amt);
-  const has=s.leader||s.addl||anyHz(s.dThis)||anyHz(s.dQtr)||anyHz(s.dNext)||(s.prod&&s.prod.some(d=>d.producer))||(s.wins&&s.wins.some(d=>d.producer||d.deal||d.teeup))||s.nextOpps;
+  const dealsArr=(s.deals&&s.deals.length)?s.deals:[...(s.dThis||[]),...(s.dQtr||[]),...(s.dNext||[])]; // read legacy saves too
+  const anyDeals=dealsArr.some(d=>d.deal||d.amt);
+  const has=s.leader||s.addl||anyDeals||(s.prod&&s.prod.some(d=>d.producer))||(s.wins&&s.wins.some(d=>d.producer||d.deal||d.teeup))||s.nextOpps;
   if(!has){card.style.display='none';return;}
   card.style.display='block';
-  const ct=c=>c==='H'?'<span class="mmr-tag mmr-h">High</span>':c==='M'?'<span class="mmr-tag mmr-m">Med</span>':c==='L'?'<span class="mmr-tag mmr-l">Low</span>':'';
+  const ct=c=>c==='H'?'<span class="mmr-tag mmr-h">Committed</span>':c==='M'?'<span class="mmr-tag mmr-m">Probable</span>':c==='L'?'<span class="mmr-tag mmr-l">Uncertain</span>':'';
   const esc=t=>(t||'').replace(/</g,'&lt;');
   let h='';
   h+=`<div class="mmr-sumblock"><h4>${mmrLabel()} &middot; ${MONTHS[CUR_MONTH_IDX]} ${CUR_YEAR}${s.leader?' &middot; '+s.leader:''}</h4></div>`;
-  const crm=mmrCrmHorizons();
-  const dcell=(fc,cv)=>{const diff=fc-cv,col=diff>=0?'var(--green)':'var(--orange)';return `<b style="color:${col}">${diff>=0?'+':'\u2212'}${fmtK(Math.abs(diff))}</b>`;};
-  const hzBlock=(title,arr,crmVal)=>{
-    const rows=(arr||[]).filter(d=>d.deal||d.amt||d.producer);if(!rows.length)return '';
-    let tot=0;rows.forEach(d=>tot+=num(d.amt));
-    let b=`<div class="mmr-sumblock"><h4>${title}</h4><table><thead><tr><th>Deal / Client</th><th>Producer</th><th style="text-align:right">Amount</th><th>Expected Close</th><th>Conf.</th><th>Notes</th></tr></thead><tbody>`;
-    rows.forEach(d=>{b+=`<tr><td><b>${d.deal||''}</b></td><td>${d.producer||''}</td><td style="text-align:right">${d.amt?fmtK(num(d.amt)):'&mdash;'}</td><td>${d.close||'&mdash;'}</td><td>${ct(d.conf)}</td><td>${esc(d.notes)}</td></tr>`;});
-    b+=`</tbody><tfoot><tr class="mmr-total-row"><td colspan="2"><b>Your forecast</b></td><td style="text-align:right"><b>${fmtK(tot)}</b></td><td colspan="3"></td></tr>`;
-    b+=`<tr><td colspan="2" class="muted">CRM (weighted)</td><td style="text-align:right">${fmtK(crmVal)}</td><td colspan="3"></td></tr>`;
-    b+=`<tr><td colspan="2"><b>Delta vs CRM</b></td><td style="text-align:right">${dcell(tot,crmVal)}</td><td colspan="3"></td></tr></tfoot></table></div>`;
-    return b;
-  };
-  const fcHtml=hzBlock('Expected to Close This Month',s.dThis,crm.cThis)
-    +hzBlock('Expected to Close by Quarter End',s.dQtr,crm.cQtr)
-    +hzBlock('Expected to Close Next Month',s.dNext,crm.cNext);
-  if(fcHtml){
-    h+=fcHtml;
-    if(s.nextOpps)h+=`<div class="mmr-sumblock"><p class="muted" style="margin:0 2px"><b>Key opportunities:</b> ${esc(s.nextOpps)}</p></div>`;
+  const rows=dealsArr.filter(d=>d.deal||d.amt||d.producer);
+  if(rows.length){
+    const committed=rows.filter(d=>d.conf==='H').reduce((a,d)=>a+num(d.amt),0);
+    const other=rows.filter(d=>d.conf!=='H').reduce((a,d)=>a+num(d.amt),0);
+    const allAmt=rows.reduce((a,d)=>a+num(d.amt),0);
+    let b=`<div class="mmr-sumblock"><h4>Deals Expected to Close</h4><table><thead><tr><th>Deal / Client</th><th>Producer</th><th>Market</th><th style="text-align:right">Amount</th><th>Expected Close</th><th>Confidence</th><th>Notes</th></tr></thead><tbody>`;
+    rows.forEach(d=>{b+=`<tr><td><b>${d.deal||''}</b></td><td>${d.producer||''}</td><td>${producerMarketOf(d.producer)||'&mdash;'}</td><td style="text-align:right">${d.amt?fmtK(num(d.amt)):'&mdash;'}</td><td>${d.close||'&mdash;'}</td><td>${ct(d.conf)}</td><td>${esc(d.notes)}</td></tr>`;});
+    b+=`</tbody><tfoot><tr class="mmr-total-row"><td colspan="3"><b>Counts in Total Expected</b> <span class="muted">(Committed)</span></td><td style="text-align:right"><b>${fmtK(committed)}</b></td><td colspan="3"></td></tr>`;
+    b+=`<tr><td colspan="3" class="muted">Not included in forecast (Probable + Uncertain)</td><td style="text-align:right">${fmtK(other)}</td><td colspan="3"></td></tr>`;
+    b+=`<tr><td colspan="3"><b>Everything listed</b></td><td style="text-align:right"><b>${fmtK(allAmt)}</b></td><td colspan="3"></td></tr></tfoot></table></div>`;
+    h+=b;
+    if(s.nextOpps)h+=`<div class="mmr-sumblock"><p class="muted" style="margin:0 2px"><b>What this depends on:</b> ${esc(s.nextOpps)}</p></div>`;
   }
   const prod=(s.prod||[]).filter(d=>d.producer||d.gap||d.plan);
   if(prod.length){h+='<div class="mmr-sumblock"><h4>Producer Focus &mdash; Coaching Plan</h4><table><thead><tr><th>Producer</th><th>Current Gap / Issue</th><th>Coaching &amp; Support Plan</th><th>Target Outcome</th></tr></thead><tbody>';
@@ -1259,141 +1530,377 @@ function mmrRenderSummary(){
 }
 
 function renderForecast(){
-  const mk=document.getElementById('fcMarket').value,pd=document.getElementById('fcProducer').value;
-  const wlabel=fcWindowLabel();
-  // BOOKED in window (closed-won client rows dated inside window)
-  const booked=DATA.cli.filter(r=>(r.won>0)&&fcInWindow(r.month,r.year)&&(!mk||r.market===mk)&&(!pd||r.producer===pd)).reduce((a,r)=>a+r.won,0);
-  // open pipeline dated inside window
-  const pipeWin=DATA.pipe.map(d=>({...d,weighted:d.rev*(STAGE_P[d.stage]||0),mi:MONTHS.indexOf(d.month),overdue:(d.year<CUR_YEAR)||(d.year===CUR_YEAR&&MONTHS.indexOf(d.month)<CUR_MONTH_IDX)}))
-    .filter(d=>fcInWindow(d.month,d.year)&&(!mk||d.market===mk)&&(!pd||d.producer===pd));
-  const commit=pipeWin.filter(d=>d.stage==='90%+').reduce((a,d)=>a+d.rev,0);
-  const best=pipeWin.filter(d=>d.stage==='75%').reduce((a,d)=>a+d.rev,0);
-  const upside=pipeWin.filter(d=>d.stage==='50%').reduce((a,d)=>a+d.rev,0);
-  // period goal: annual aggregate goal (filtered) * seasonal share for the window
-  const goalAnnual=aggGoal(p=>(!mk||p.market===mk)&&(!pd||p.producer===pd));
-  const periodGoal=goalAnnual*fcGoalShare();
-  window._mmrBooked=booked;window._mmrPeriodGoal=periodGoal;
-  const projected=booked+commit; // conservative commit projection
-  const projBest=booked+commit+best;
-  // ---- leader monthly commit (from saved Monthly Market Review; addl auto-rolls from Step 2 deals) ----
-  const isMonth=document.getElementById('fcWindow').value==='month';
-  const mmr=mmrLoad();
-  const leaderAddl=(typeof mmrLiveAddl==='function')?mmrLiveAddl():num(mmr.addl);
-  const totalCommitted=booked+leaderAddl;            // template: booked + additional confident-to-close
-  const goalForGap=isMonth?periodGoal:periodGoal;
-  // prefer the leader's committed number when one has been entered, else fall back to model commit
-  const projectedUse=leaderAddl>0?totalCommitted:projected;
-  const gap=projectedUse-goalForGap;
-  let kpis=
-    kpi('Window',wlabel,'forecast horizon','yellow')+
-    kpi('Booked',fmtK(booked),'already in for the period','green');
-  if(leaderAddl>0){
-    kpis+=kpi('Leader Commit',fmtK(leaderAddl),(mmr.leader?mmr.leader+' \u00b7 ':'')+'confident-to-close','blue')+
-          kpi('Total Committed',fmtK(totalCommitted),'booked + leader commit','green')+
-          kpi('% to Goal',periodGoal?pct(totalCommitted/periodGoal):'\u2014',periodGoal?fmtK(periodGoal)+' period goal':'no goal in window',totalCommitted>=periodGoal?'green':'warm');
-  } else {
-    kpis+=kpi('Commit (90%+)',fmtK(commit),pipeWin.filter(d=>d.stage==='90%+').length+' deals one push from close','green')+
-          kpi('Projected Finish',fmtK(projected),'booked + commit','')+
-          kpi('vs Period Goal',(gap>=0?'+':'-')+fmtK(Math.abs(gap)),periodGoal?fmtK(periodGoal)+' goal ('+pct(projected/periodGoal)+' covered)':'no goal in window',gap>=0?'green':'warm');
-  }
-  kpis+=kpi('Best Case Upside',fmtK(projBest),'+ 75% best-case deals','yellow');
-  document.getElementById('fcKpis').innerHTML=kpis;
-  // ---- populate MMR live spans + summary ----
-  const mmrB=document.getElementById('mmrBooked');
-  if(mmrB){
-    mmrB.textContent=fmt(booked);
-    mmrRollup();  // rollup owns Total Committed + % to goal (live from current Step 2 deals)
-  }
-  mmrRenderSummary();
-  // ---- Market chart: stacked booked/commit/best vs goal line ----
-  const markets=mk?[mk]:uniq(DATA.cli.map(r=>r.market));
-  const bArr=[],cArr=[],beArr=[],gArr=[];
-  markets.forEach(m=>{
-    bArr.push(DATA.cli.filter(r=>r.won>0&&r.market===m&&fcInWindow(r.month,r.year)&&(!pd||r.producer===pd)).reduce((a,r)=>a+r.won,0));
-    cArr.push(pipeWin.filter(d=>d.market===m&&d.stage==='90%+').reduce((a,d)=>a+d.rev,0));
-    beArr.push(pipeWin.filter(d=>d.market===m&&d.stage==='75%').reduce((a,d)=>a+d.rev,0));
-    gArr.push(marketGoal(m,pd?(p=>p.producer===pd):null)*fcGoalShare());
+  fcInitControls();
+  const groups=fcGroups(),defs=fcPeriodDefs(),focus=fcFocus();
+  const allMembers=groups.reduce((a,g)=>a.concat(g.members),[]);
+  const S={};groups.forEach(g=>{S[g.name]=fcSeries(g.members);});
+  const T=fcSeries(allMembers);
+
+  /* ---------- KPIs: the focus period, answered end to end ---------- */
+  const M=focus.months;
+  const kPlan=fcSum(T.plan,M),kClosed=fcSum(T.closed,M),kFc=fcSumFwd(T.fc,M),kHeld=fcSumFwd(T.held,M);
+  const kProj=kClosed+kFc,kVar=kProj-kPlan;
+  window._mmrBooked=kClosed;window._mmrPeriodGoal=kPlan;
+  const fwd=M.filter(i=>i>CUR_MONTH_IDX);
+  const fwdSpan=fwd.length?(fwd.length===1?MONTHS[fwd[0]]:MONTHS[fwd[0]]+'\u2013'+MONTHS[fwd[fwd.length-1]]):'no open months';
+  document.getElementById('fcKpis').innerHTML=
+    kpi('Focus Period',focus.title,focus.note,'yellow')+
+    kpi('Plan',fmtK(kPlan),(T.annualPlan?'out of a '+fmtK(T.annualPlan)+' plan for the full year':'no plan in view'),'')+
+    kpi('Closed',fmtK(kClosed),(kPlan?pct(kClosed/kPlan)+' of this period\u2019s plan':'\u2014')+' \u00b7 booked in CRM','green')+
+    kpi('Forecast',fmtK(kFc),T.nCounted?T.nCounted+' committed deal'+(T.nCounted>1?'s':'')+' \u00b7 '+fwdSpan:'no leader forecast entered yet \u00b7 '+fwdSpan,'blue')+
+    kpi('Total Expected',fmtK(kProj),fmtK(kClosed)+' closed + '+fmtK(kFc)+' forecast','')+
+    kpi('Gap to Plan',(kVar>=0?'+':'\u2212')+fmtK(Math.abs(kVar)),kPlan?pct(kProj/kPlan)+' of plan':'no plan in view',kVar>=0?'green':'warm')+
+    kpi('Not Included in Forecast',fmtK(kHeld),T.nHeld?T.nHeld+' '+fcHeldLabel()+' deal'+(T.nHeld>1?'s':'')+' \u2014 low probability pipeline, left out of Total Expected':'nothing left out at this setting','yellow');
+
+  /* ---------- Where We Stand: every period side by side ---------- */
+  document.getElementById('fcBoardTitle').textContent='This Month, This Quarter, and the Full Year';
+  {const bd=document.getElementById('fcBoardDesc');if(bd){bd.innerHTML='';bd.style.display='none';}}
+  let bh='<thead><tr><th>Period</th><th>Months</th><th style="text-align:right">Plan</th><th style="text-align:right">Closed</th>'+
+    '<th style="text-align:right">Forecast</th><th style="text-align:right">Total Expected</th><th style="text-align:right">Gap to Plan</th>'+
+    '<th class="pcol">% of Plan</th><th style="text-align:right">Not Included in Forecast</th></tr></thead><tbody>';
+  defs.forEach(d=>{
+    const on=d.key===focus.key;
+    if(!d.months.length){
+      bh+=`<tr class="fc-brow${on?' fc-on':''}" onclick="document.getElementById('fcPeriod').value='${d.key}';renderForecast()"><td><b>${d.label}</b></td><td class="muted">${d.title}</td><td colspan="7" class="muted">Outside the ${CUR_YEAR} plan year.</td></tr>`;return;}
+    const pl=fcSum(T.plan,d.months),cl=fcSum(T.closed,d.months),fcv2=fcSumFwd(T.fc,d.months);
+    const pj=cl+fcv2,hd=fcSumFwd(T.held,d.months);
+    bh+=`<tr class="fc-brow${on?' fc-on':''}" onclick="document.getElementById('fcPeriod').value='${d.key}';renderForecast()">`+
+      `<td><b>${d.label}</b>${on?' <span class="fc-onpill">focus</span>':''}</td>`+
+      `<td class="muted">${d.title}</td>`+
+      `<td style="text-align:right">${fmt(Math.round(pl))}</td>`+
+      `<td style="text-align:right">${fmt(Math.round(cl))}</td>`+
+      `<td style="text-align:right">${fcv2?fmt(Math.round(fcv2)):'<span class="muted">&mdash;</span>'}</td>`+
+      `<td style="text-align:right"><b>${fmt(Math.round(pj))}</b></td>`+
+      `<td style="text-align:right">${fcVar(pj-pl)}</td>`+
+      `<td style="text-align:right">${pl?pct(pj/pl):'\u2014'}</td>`+
+      `<td style="text-align:right">${hd?'<span style="color:var(--orange);font-weight:800">'+fmt(Math.round(hd))+'</span>':'<span class="muted">&mdash;</span>'}</td></tr>`;
   });
-  destroyChart('fcMarketChart');
-  CHARTS['fcMarketChart']=new Chart(document.getElementById('fcMarketChart'),{data:{labels:markets,datasets:[
-    {type:'bar',label:'Booked',data:bArr,backgroundColor:C.green,stack:'s'},
-    {type:'bar',label:'Commit 90%+',data:cArr,backgroundColor:C.blue,stack:'s'},
-    {type:'bar',label:'Best Case 75%',data:beArr,backgroundColor:C.yellow,stack:'s'},
-    {type:'line',label:'Period Goal',data:gArr,borderColor:C.dgray,backgroundColor:'#fff',borderWidth:3,pointStyle:'rectRot',pointRadius:10,pointHoverRadius:12,pointBorderColor:C.dgray,pointBorderWidth:3,pointBackgroundColor:'#fff',showLine:false,order:-1,clip:false}
-  ]},options:{plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmtK(c.parsed.y)}}},scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true,suggestedMax:Math.max(...bArr.map((b,i)=>b+cArr[i]+beArr[i]),...gArr)*1.08,ticks:{callback:v=>fmtK(v)}}}}});
-  // ---- Coverage doughnut: booked + commit vs remaining-to-goal ----
-  destroyChart('fcCoverChart');
-  const remain=Math.max(0,periodGoal-projected);
-  CHARTS['fcCoverChart']=new Chart(document.getElementById('fcCoverChart'),{type:'doughnut',data:{labels:['Booked','Commit 90%+','Gap to Goal'],datasets:[{data:[booked,commit,remain],backgroundColor:[C.green,C.blue,C.lgray]}]},options:{plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:c=>c.label+': '+fmtK(c.raw)}}}}});
-  // ---- Confident-to-close deal table (50%+ in window) ----
-  let deals=pipeWin.filter(d=>d.stage==='50%'||d.stage==='75%'||d.stage==='90%+').map(d=>({...d}));
-  deals.sort((a,b)=>(a[fcSort.k]<b[fcSort.k]?-1:1)*fcSort.d);
-  const dcols=[['company','Company'],['producer','Producer'],['market','Market'],['stage','Stage'],['rev','Revenue'],['month','Close'],['overdue','Status']];
-  let dh='<table><thead><tr>'+dcols.map(c=>`<th onclick="sortFc('${c[0]}')">${c[1]}</th>`).join('')+'<th>Opp</th></tr></thead><tbody>';
-  if(!deals.length)dh+='<tr><td colspan="8" class="muted" style="padding:18px">No 50%+ deals are dated to close in this window. Widen the window or check whether deals need re-dating.</td></tr>';
-  deals.forEach(d=>{const sc=d.stage==='90%+'?C.green:d.stage==='75%'?C.lgreen:C.lblue;const sct=d.stage==='50%'?C.dgray:'#fff';
-    dh+=`<tr><td><b>${d.company||'(unnamed)'}</b></td><td>${d.producer||''}</td><td>${d.market||''}</td><td><span class="pill" style="background:${sc};color:${sct}">${d.stage}</span></td><td>${fmt(d.rev)}</td><td>${d.month} ${d.year}</td><td>${d.overdue?'<span class="flag red">SLIPPED</span>':'<span class="flag ok">On track</span>'}</td><td>${d.oppLink?`<a class="opp" href="${d.oppLink}" target="_blank">open &#8599;</a>`:''}</td></tr>`;});
-  dh+='</tbody></table>';document.getElementById('fcDealTbl').innerHTML=dh;
-  // ---- Producer focus: behind pace + committable in window ----
+  bh+='</tbody>';
+  document.getElementById('fcBoard').innerHTML=bh;
+
+  /* ---------- By market, for the focus period ---------- */
+  document.getElementById('fcDetailTitle').textContent=focus.label+' \u00b7 '+focus.title;
+  document.getElementById('fcDetailDesc').innerHTML=
+    '<b>'+focus.note+'.</b> Plan is what that market committed to for these months.';
+  let dh='<thead><tr><th>Market</th><th style="text-align:right">Plan</th><th style="text-align:right">Closed</th>'+
+    '<th style="text-align:right">Forecast</th><th style="text-align:right">Total Expected</th>'+
+    '<th style="text-align:right">Gap to Plan</th><th class="pcol">% of Plan</th>'+
+    '<th style="text-align:right">Not Included in Forecast</th></tr></thead><tbody>';
+  if(!M.length){dh+='<tr><td colspan="8" class="muted" style="padding:18px">This period falls outside the '+CUR_YEAR+' plan year. Pick another focus period.</td></tr>';}
+  let tp=0,tc=0,tf=0,tu=0;
+  if(M.length)groups.forEach(g=>{
+    const s2=S[g.name];
+    const pl=fcSum(s2.plan,M),cl=fcSum(s2.closed,M),fw=fcSumFwd(s2.fc,M),up=fcSumFwd(s2.held,M);
+    const pj=cl+fw;tp+=pl;tc+=cl;tf+=fw;tu+=up;
+    dh+=`<tr><td><b>${g.name}</b></td>`+
+      `<td style="text-align:right">${fmt(Math.round(pl))}</td>`+
+      `<td style="text-align:right">${fmt(Math.round(cl))}</td>`+
+      `<td style="text-align:right">${fw?fmt(Math.round(fw)):'<span class="muted">&mdash;</span>'}</td>`+
+      `<td style="text-align:right"><b>${fmt(Math.round(pj))}</b></td>`+
+      `<td style="text-align:right">${fcVar(pj-pl)}</td>`+
+      `<td style="text-align:right">${pl?pct(pj/pl):'\u2014'}</td>`+
+      `<td style="text-align:right">${up?'<span style="color:var(--orange);font-weight:800">'+fmt(Math.round(up))+'</span>':'<span class="muted">&mdash;</span>'}</td></tr>`;
+  });
+  if(M.length){const tpj=tc+tf;
+    dh+=`</tbody><tfoot><tr class="fc-tot"><td><b>South Region Total</b></td>`+
+      `<td style="text-align:right"><b>${fmt(Math.round(tp))}</b></td>`+
+      `<td style="text-align:right"><b>${fmt(Math.round(tc))}</b></td>`+
+      `<td style="text-align:right"><b>${tf?fmt(Math.round(tf)):'\u2014'}</b></td>`+
+      `<td style="text-align:right"><b>${fmt(Math.round(tpj))}</b></td>`+
+      `<td style="text-align:right">${fcVar(tpj-tp)}</td>`+
+      `<td style="text-align:right"><b>${tp?pct(tpj/tp):'\u2014'}</b></td>`+
+      `<td style="text-align:right"><b style="color:var(--orange)">${tu?fmt(Math.round(tu)):'\u2014'}</b></td></tr></tfoot>`;
+  }else{dh+='</tbody>';}
+  document.getElementById('fcDetail').innerHTML=dh;
+
+  /* ---------- one chart, two views ---------- */
+  const heldAny=(T.nHeld>0);
+  destroyChart('fcMainChart');
+  const ctx=document.getElementById('fcMainChart');
+  const money={ticks:{callback:v=>fmtK(v)}};
+  const common={maintainAspectRatio:false,plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmtK(c.parsed.y)}}}};
+  let desc='';
+  if(FC_CHART_VIEW==='market'){
+    desc='';
+    const labels=groups.map(g=>g.name);
+    const ds=[
+      {type:'bar',label:'Closed',data:groups.map(g=>fcSum(S[g.name].closed,M)),backgroundColor:C.green,stack:'s'},
+      {type:'bar',label:'Forecast',data:groups.map(g=>fcSumFwd(S[g.name].fc,M)),backgroundColor:C.blue,stack:'s'}
+    ];
+    if(heldAny)ds.push({type:'bar',label:'Not included in forecast',data:groups.map(g=>fcSumFwd(S[g.name].held,M)),backgroundColor:C.orange,stack:'s'});
+    ds.push({type:'line',stack:'lplan',label:focus.label+' plan',data:groups.map(g=>fcSum(S[g.name].plan,M)),borderColor:C.dgray,backgroundColor:C.yellow,borderWidth:3,pointStyle:'rectRot',pointRadius:10,pointHoverRadius:12,pointBorderColor:C.dgray,pointBorderWidth:3,pointBackgroundColor:C.yellow,showLine:false,order:-1,clip:false});
+    CHARTS['fcMainChart']=new Chart(ctx,{data:{labels,datasets:ds},options:{...common,scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true,...money}}}});
+  }else{
+    desc='Every month of '+CUR_YEAR+'. Bars are what each month landed or is expected to land; the line is the monthly plan (the annual plan divided by twelve).';
+    const ds=[
+      {type:'bar',label:'Closed',data:T.closed.slice(),backgroundColor:C.green,stack:'m'},
+      {type:'bar',label:'Forecast',data:T.fc.map((v,i)=>i>CUR_MONTH_IDX?v:0),backgroundColor:C.blue,stack:'m'}
+    ];
+    if(heldAny)ds.push({type:'bar',label:'Not included in forecast',data:T.held.map((v,i)=>i>CUR_MONTH_IDX?v:0),backgroundColor:C.orange,stack:'m'});
+    ds.push({type:'line',stack:'lplan',label:'Monthly plan',data:T.plan,borderColor:C.dgray,borderWidth:3,pointRadius:0,tension:.15});
+    CHARTS['fcMainChart']=new Chart(ctx,{data:{labels:MONTHS,datasets:ds},options:{...common,scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true,...money}}}});
+  }
+  document.getElementById('fcChartDesc').innerHTML=desc;
+
+  /* ---- leader input: refresh derived tables + read-back ---- */
+  mmrRollup();
+  mmrRenderSummary();
+
+  /* ---- Producer Focus: behind seasonal pace, with pipeline they could still convert ---- */
   const pace=DATA.regionCurve[CUR_MONTH_IDX];
-  const focus=DATA.producers.map(p=>{
+  const mk=fcMk(),pd=fcPd();
+  const focusP=DATA.producers.map(p=>{
     const att=p.goal?p.won/p.goal:0;
-    const comm=pipeWin.filter(d=>d.producer===p.producer&&(d.stage==='75%'||d.stage==='90%+')).reduce((a,d)=>a+d.rev,0);
-    return {...p,att,gap:att-pace,comm};
+    const conv=DATA.pipe.filter(d=>d.producer===p.producer&&d.year===CUR_YEAR&&MONTHS.indexOf(d.month)>=CUR_MONTH_IDX&&(STAGE_P[d.stage]||0)>=0.5).reduce((a,d)=>a+d.rev,0);
+    return {...p,att,comm:conv};
   }).filter(p=>(!mk||p.market===mk)&&(!pd||p.producer===pd)&&p.att<pace).sort((a,b)=>b.goal-a.goal).slice(0,25);
-  const pcols=[['Producer','producer'],['Market','market'],['Goal','goal'],['Won YTD','won'],['Attain','att'],['Committable (window)','comm'],['12-Mo Pipe','pipeline12'],['Delinquent','delinq'],['Meetings','meetings']];
-  let ph='<table><thead><tr>'+pcols.map(c=>`<th>${c[0]}</th>`).join('')+'</tr></thead><tbody>';
-  if(!focus.length)ph+='<tr><td colspan="9" class="muted" style="padding:18px">No producers are behind seasonal pace in this view. 🎉</td></tr>';
-  focus.forEach(p=>{ph+=`<tr><td><b>${p.producer}</b></td><td>${p.market||''}</td><td>${fmtK(p.goal)}</td><td>${fmtK(p.won)}</td><td><span class="flag ${p.att>=pace?'ok':p.att>pace-.15?'amber':'red'}">${pct(p.att)}</span></td><td><b>${fmtK(p.comm)}</b></td><td>${fmtK(p.pipeline12)}</td><td>${p.delinq?fmtK(p.delinq):'&mdash;'}</td><td>${p.meetings||0}</td></tr>`;});
+  const pcols=['Producer','Market','Goal','Closed YTD','Attainment','Still Convertible (50%+)','12-Mo Pipe','Delinquent','Meetings'];
+  let ph='<table><thead><tr>'+pcols.map(c=>`<th>${c}</th>`).join('')+'</tr></thead><tbody>';
+  if(!focusP.length)ph+='<tr><td colspan="9" class="muted" style="padding:18px">No producers are behind their goal pace in this view. \u{1F389}</td></tr>';
+  focusP.forEach(p=>{ph+=`<tr><td><b>${p.producer}</b></td><td>${p.market||''}</td><td>${fmtK(p.goal)}</td><td>${fmtK(p.won)}</td><td><span class="flag ${p.att>=pace?'ok':p.att>pace-.15?'amber':'red'}">${pct(p.att)}</span></td><td><b>${fmtK(p.comm)}</b></td><td>${fmtK(p.pipeline12)}</td><td>${p.delinq?fmtK(p.delinq):'&mdash;'}</td><td>${p.meetings||0}</td></tr>`;});
   ph+='</tbody></table>';document.getElementById('fcProdTbl').innerHTML=ph;
 }
-function sortFc(k){fcSort.d=fcSort.k===k?-fcSort.d:-1;fcSort.k=k;renderForecast();}
 
 /* ---------- HISTORICAL ---------- */
-function renderHistorical(){
-  const level=document.getElementById('hLevel').value;const key=level==='Market'?'market':level==='Practice'?'practice':'producer';
-  opt('hEntity',uniq(DATA.cli.map(r=>r[key])),'All '+level+'s');
-  const ent=document.getElementById('hEntity').value;const rows=DATA.cli.filter(r=>!ent||r[key]===ent);
-  const priorY=DATA.years.filter(y=>y<CUR_YEAR);
-  const avgMonth=MONTHS.map((m)=>{let s=0,c=0;priorY.forEach(y=>{s+=rows.filter(r=>r.year===y&&r.month===m).reduce((a,r)=>a+r.won,0);c++;});return c?s/c:0;});
-  const curMonth=MONTHS.map((m,i)=>i<=CUR_MONTH_IDX?rows.filter(r=>r.year===CUR_YEAR&&r.month===m).reduce((a,r)=>a+r.won,0):null);
-  destroyChart('hSeasonChart');
-  CHARTS['hSeasonChart']=new Chart(document.getElementById('hSeasonChart'),{type:'bar',data:{labels:MONTHS,datasets:[{label:'Historical Avg / Month',data:avgMonth,backgroundColor:C.lgray},{type:'line',label:CUR_YEAR+' Actual',data:curMonth,borderColor:C.orange,backgroundColor:C.orange,tension:.25,spanGaps:false}]},options:{plugins:{legend:{position:'bottom'}},scales:{y:{ticks:{callback:v=>fmtK(v)}}}}});
-  destroyChart('hYoyChart');const yoy=DATA.years.map(y=>rows.filter(r=>r.year===y).reduce((a,r)=>a+r.won,0));
-  CHARTS['hYoyChart']=new Chart(document.getElementById('hYoyChart'),{type:'bar',data:{labels:DATA.years,datasets:[{label:'Won Revenue',data:yoy,backgroundColor:DATA.years.map(y=>y===CUR_YEAR?C.orange:C.blue)}]},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>fmtK(v)}}}}});
-  const groups=uniq(DATA.cli.map(r=>r[key]));
-  const ytdRows=groups.map(g=>{const cur=DATA.cli.filter(r=>r[key]===g&&r.year===CUR_YEAR&&MONTHS.indexOf(r.month)<=CUR_MONTH_IDX).reduce((a,r)=>a+r.won,0);
-    const hist=priorY.map(y=>DATA.cli.filter(r=>r[key]===g&&r.year===y&&MONTHS.indexOf(r.month)<=CUR_MONTH_IDX).reduce((a,r)=>a+r.won,0));
-    const avg=hist.length?hist.reduce((a,b)=>a+b,0)/hist.length:0;return {g,cur,avg,diff:avg?cur/avg-1:0};}).filter(r=>r.cur>0||r.avg>0).sort((a,b)=>b.cur-a.cur);
-  let h=`<table><thead><tr><th>${level}</th><th>YTD ${CUR_YEAR} (thru ${MONTHS[CUR_MONTH_IDX]})</th><th>Hist. Avg Same Window</th><th>vs History</th></tr></thead><tbody>`;
-  ytdRows.forEach(r=>{h+=`<tr><td><b>${r.g}</b></td><td>${fmtK(r.cur)}</td><td>${fmtK(r.avg)}</td><td><span class="flag ${r.diff>=0?'ok':r.diff>-.15?'amber':'red'}">${r.diff>=0?'+':''}${pct(r.diff)}</span></td></tr>`;});
-  h+='</tbody></table>';document.getElementById('hYtdTbl').innerHTML=h;
-  const cur=ytdRows.reduce((a,r)=>a+r.cur,0),avg=ytdRows.reduce((a,r)=>a+r.avg,0);
-  document.getElementById('hKpis').innerHTML=kpi('YTD '+CUR_YEAR,fmtK(cur),'through '+MONTHS[CUR_MONTH_IDX],'')+kpi('Historical YTD Avg',fmtK(avg),'same Jan&ndash;'+MONTHS[CUR_MONTH_IDX]+' window','yellow')+kpi('vs Own History',(cur>=avg?'+':'')+pct(avg?cur/avg-1:0),cur>=avg?'ahead of typical pace':'behind typical pace',cur>=avg?'green':'warm');
+/* ---------- HISTORICAL PACING & PRODUCERS (merged) ----------
+   Local helpers below are kept separate from the Forecast tab's own
+   fcPeriodDefs/fcSeries etc. -- the two tabs answer different questions (this
+   one is history vs. history; Forecast is plan vs. commitment) and we don't
+   want this tab's math to become accidentally coupled to Forecast's. */
+function hVal(id){return _val(id);}
+function hThruLbl(){return MONTHS[CUR_MONTH_IDX];}
+function hPriorYears(){return DATA.years.filter(y=>y<CUR_YEAR).sort((a,b)=>a-b);}
+function hLastYear(){const p=hPriorYears();return p.length?p[p.length-1]:null;}
+// closed revenue for a filtered row set, Jan..thru of a given year (honors the global Revenue scope)
+function hWindow(rows,year){return rows.filter(r=>r.year===year&&MONTHS.indexOf(r.month)<=CUR_MONTH_IDX).reduce((a,r)=>a+revVal(r),0);}
+function hFullYear(rows,year){return rows.filter(r=>r.year===year).reduce((a,r)=>a+revVal(r),0);}
+function hBaseRows(){
+  const mk=hVal('hMarket'),pr=hVal('hPractice'),pd=hVal('hProducer');
+  return DATA.cli.filter(r=>(!mk||r.market===mk)&&(!pr||r.practice===pr)&&(!pd||r.producer===pd));
 }
+// One progress-cell renderer so every table's bar lines up the same way.
+// v = share closed. due = the share that should be closed by now (optional);
+// green when v is at or past due, orange when short -- the same test the
+// Ahead/Behind column uses, so the color and the number can never disagree.
+// The navy tick on the track marks where "due" sits.
+function pbar(v,good,color,due){
+  const ok=(due===undefined||due===null)?good:(v>=due);
+  const c=color||(ok?C.green:C.orange);
+  const w=Math.max(0,Math.min(100,v*100));
+  const mk=(due===undefined||due===null||!(due>0))?'':
+    `<div class="pbar-mark" style="left:${Math.max(0,Math.min(100,due*100))}%" title="${pct(due)} due by now"></div>`;
+  return `<div class="pbar"><div class="pbar-track"><div class="pbar-fill" style="width:${w}%;background:${c}"></div>${mk}</div><span class="pbar-num">${pct(v)}</span></div>`;
+}
+function hFlag(v,good,ok){return v>=good?'ok':(v>=ok?'amber':'red');}
+const VS_MIN=25000; // prior-year dollars below this are too small for a meaningful % change
+function hVsHist(cur,hist){
+  if(!hist)return '<span class="muted">no history</span>';
+  if(hist<VS_MIN)return '<span class="muted">too little history</span>';
+  return `<span class="flag ${hFlag(cur/hist-1,0,-0.15)}">${cur>=hist?'+':''}${pct(cur/hist-1)}</span>`;
+}
+function hVar(v){const c=v>=0?'var(--green)':'var(--orange)';const s=v>=0?'+':'\u2212';
+  return `<b style="color:${c}">${s}${fmtK(Math.abs(v))}</b>`;}
 
-/* ---------- PRODUCERS ---------- */
-let prSort={k:'won',d:-1};
-function renderProducers(){
-  const prod=document.getElementById('prProducer').value,mkt=document.getElementById('prMarket').value,prc=document.getElementById('prPractice').value,st=document.getElementById('prStatus').value;
-  const pace=DATA.regionCurve[CUR_MONTH_IDX];
-  let rows=DATA.producers.map(p=>{const att=p.goal?p.won/p.goal:0;return {...p,att,gap:att-pace};}).filter(p=>(!prod||p.producer===prod)&&(!mkt||p.market===mkt)&&(!prc||p.practice===prc));
-  if(st==='ahead')rows=rows.filter(p=>p.att>=pace);if(st==='behind')rows=rows.filter(p=>p.att<pace&&p.won>0);if(st==='atrisk')rows=rows.filter(p=>p.won<=0);
-  rows.sort((a,b)=>(a[prSort.k]<b[prSort.k]?-1:1)*prSort.d);
-  document.getElementById('prKpis').innerHTML=kpi('Producers w/ Goal',rows.length,'(anyone with a revenue goal)','')+kpi('Total Won',fmtK(rows.reduce((a,p)=>a+p.won,0)),'across filtered producers','green')+kpi('Total Goal',fmtK(rows.reduce((a,p)=>a+p.goal,0)),'aggregate plan','')+kpi('Behind Pace',rows.filter(p=>p.gap<0&&p.won>0).length,'producers under seasonal pace','warm')+kpi('No Won YTD',rows.filter(p=>p.won<=0).length,'goal but nothing booked','warm');
-  const cols=[['producer','Producer'],['market','Market'],['practice','Practice'],['goal','Goal'],['won','Won'],['att','Attain %'],['gap','Pace Gap'],['conv','Convergence'],['total','Total Contrib'],['pipeline12','12-Mo Pipeline']];
-  let h='<table><thead><tr>'+cols.map(c=>`<th onclick="sortPr('${c[0]}')">${c[1]}</th>`).join('')+'</tr></thead><tbody>';
-  rows.slice(0,400).forEach(p=>{h+=`<tr><td><b>${p.producer}</b></td><td>${p.market||''}</td><td>${p.practice||''}</td><td>${fmtK(p.goal)}</td><td>${fmtK(p.won)}</td><td><div class="bar-cell"><div class="bar-fill" style="width:${Math.min(100,p.att*100)}%;background:${p.att>=pace?C.green:C.orange}"></div><span class="bar-txt">${pct(p.att)}</span></div></td><td><span class="flag ${p.gap>=0?'ok':p.gap>-.15?'amber':'red'}">${p.gap>=0?'+':''}${pct(p.gap)}</span></td><td>${fmtK(p.conv)}</td><td>${fmtK(p.total)}</td><td>${fmtK(p.pipeline12)}</td></tr>`;});
-  h+='</tbody></table>';document.getElementById('prTbl').innerHTML=h;
+/* ================= COMPARISON BASIS =================
+   "Compare This Year To" decides what this year is judged against, in two places:
+   the on-pace target and the prior-period column.
+     one year ticked  -> straight comparison to that year
+     several ticked   -> the average across them, so a producer who started in 2024
+                         is averaged over 2024-2025 only, not dragged down by years
+                         before they were selling.
+   Nothing ticked falls back to the last complete year, so the page always has
+   something to compare against. */
+function hSelYears(){
+  const ys=[...document.querySelectorAll('#hCompare input.hcy:checked')].map(e=>+e.value).sort((a,b)=>a-b);
+  if(ys.length)return ys;
+  const LY=hLastYear();return LY?[LY]:[];
 }
-function sortPr(k){prSort.d=prSort.k===k?-prSort.d:-1;prSort.k=k;renderProducers();}
+function hWinYears(){return hSelYears();}
+function hYearsWithData(set){return hSelYears().filter(y=>hFullYear(set,y)>0);}
+function hYrSpan(ys){
+  if(!ys.length)return '';
+  if(ys.length===1)return String(ys[0]);
+  const consecutive=ys.every((y,i)=>i===0||y===ys[i-1]+1);
+  return consecutive?(ys[0]+'\u2013'+ys[ys.length-1]):ys.join(', ');
+}
+function hBuildCompare(){
+  const box=document.getElementById('hCompare');if(!box)return;
+  const yrs=hPriorYears(),LY=hLastYear();
+  box.innerHTML=yrs.map(y=>
+    `<label class="segopt${y===LY?' on':''}"><input type="checkbox" class="hcy" value="${y}"${y===LY?' checked':''}><span>${y}</span></label>`
+  ).join('')+`<span class="seglink"><a onclick="hCompSet('all')">All</a><a onclick="hCompSet('l3')">Last 3</a><a onclick="hCompSet('ly')">Last yr</a></span>`;
+  box.querySelectorAll('input.hcy').forEach(c=>c.onchange=()=>{hComparePaint();renderPacing();});
+  hComparePaint();
+}
+function hCompSet(mode){
+  const yrs=hPriorYears(),LY=hLastYear(),keep=mode==='all'?yrs:(mode==='l3'?yrs.slice(-3):(LY?[LY]:[]));
+  document.querySelectorAll('#hCompare input.hcy').forEach(c=>{c.checked=keep.includes(+c.value);});
+  hComparePaint();renderPacing();
+}
+function hComparePaint(){document.querySelectorAll('#hCompare .segopt').forEach(l=>{const i=l.querySelector('input');l.classList.toggle('on',!!(i&&i.checked));});}
+function hCompWindow(set){
+  const ys=hYearsWithData(set);if(!ys.length)return 0;
+  return ys.reduce((a,y)=>a+hWindow(set,y),0)/ys.length;
+}
+function hCompShare(set){
+  const ys=hYearsWithData(set);if(!ys.length)return 0;
+  return ys.reduce((a,y)=>a+(hFullYear(set,y)?hWindow(set,y)/hFullYear(set,y):0),0)/ys.length;
+}
+const HIST_MIN=250000; // below this floor, a row's own timing is unreliable; borrow the region's instead
+function hHistBase(set){return hYearsWithData(set).reduce((a,y)=>a+hFullYear(set,y),0);}
+function hOwnTimingOK(set){return hYearsWithData(set).length>=2&&hHistBase(set)>=HIST_MIN;}
+function hCompHdr(){const w=hWinYears();if(!w.length)return 'Won \u2014';
+  return (w.length>1?'Avg Won ':'Won ')+hYrSpan(w);}
+function hCompShort(){const w=hWinYears();
+  return w.length>1?'Avg Won':(w.length?('Won '+w[0]):'Prior Yr');}
+function hCompPhrase(){const w=hWinYears();if(!w.length)return 'no year selected';
+  return w.length>1?('the average of <b>'+hYrSpan(w)+'</b>'):('<b>'+w[0]+'</b>');}
+
+let hProdSort={k:'cur',d:-1};
+function renderPacing(){
+  const thru=hThruLbl();
+  const allRows=DATA.cli;
+  const CH=hCompHdr(), CS=hCompShort(), CP=hCompPhrase();
+  const regionPace=hCompShare(allRows);
+  // own timing only when the row has real history behind it; otherwise borrow the region share
+  const paceFor=(set)=>{const p=hOwnTimingOK(set)?hCompShare(set):0;return p>0?p:regionPace;};
+  const rows=hBaseRows();
+  const revTxt=revScopeLabel();
+
+  // ---- charts ----
+  const basisYears=hYearsWithData(rows);
+  const lyMonth=MONTHS.map(m=>basisYears.length
+    ?basisYears.reduce((a,y)=>a+rows.filter(r=>r.year===y&&r.month===m).reduce((s,r)=>s+revVal(r),0),0)/basisYears.length
+    :0);
+  const curMonth=MONTHS.map((m,i)=>i<=CUR_MONTH_IDX?rows.filter(r=>r.year===CUR_YEAR&&r.month===m).reduce((a,r)=>a+revVal(r),0):null);
+  destroyChart('hSeasonChart');
+  CHARTS['hSeasonChart']=new Chart(document.getElementById('hSeasonChart'),{type:'bar',data:{labels:MONTHS,datasets:[
+    {label:(basisYears.length>1?('avg won by month, '+hYrSpan(basisYears)):((basisYears[0]||'prior year')+' won by month')),data:lyMonth,backgroundColor:C.lblue},
+    {type:'line',label:CUR_YEAR+' actual',data:curMonth,borderColor:C.orange,backgroundColor:C.orange,borderWidth:3,tension:.25,spanGaps:false}
+  ]},options:{plugins:{legend:{position:'bottom'}},scales:{y:{ticks:{callback:v=>fmtK(v)}}}}});
+  const sd=document.getElementById('hSeasonDesc');
+  if(sd)sd.innerHTML=basisYears.length
+    ?('Blue bars are actual won revenue by month, '+(basisYears.length>1
+        ?('averaged across <b>'+hYrSpan(basisYears)+'</b>')
+        :('for <b>'+basisYears[0]+'</b>'))
+      +'. The orange line is <b>'+CUR_YEAR+'</b> through '+thru+'. Where the line sits below the bars, we are selling less than we did then. '
+      +'This chart is history vs. history \u2014 there is no plan in it.')
+    :'None of the selected years have revenue for this filter.';
+  destroyChart('hYoyChart');
+  const yoy=DATA.years.map(y=>hFullYear(rows,y));
+  CHARTS['hYoyChart']=new Chart(document.getElementById('hYoyChart'),{type:'bar',data:{labels:DATA.years,datasets:[{label:'Closed revenue',data:yoy,backgroundColor:DATA.years.map(y=>y===CUR_YEAR?C.orange:C.blue)}]},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>fmtK(v)}}}}});
+
+  // ---- shared row builder for market / practice ----
+  function buildLevel(keyField,names,planFor,label,tblId){
+    const out=names.map(n=>{
+      const set=rows.filter(r=>r[keyField]===n);
+      const cur=hWindow(set,CUR_YEAR);
+      const hist=hCompWindow(set);
+      const plan=planFor(n)||0;
+      const att=plan?cur/plan:0;
+      const pc=paceFor(set);
+      return {n,cur,hist,plan,att,pc,gap:att-pc,expected:plan*pc};
+    }).filter(r=>r.cur>0||r.hist>0||r.plan>0).sort((a,b)=>b.cur-a.cur);
+    let h=`<table><thead><tr><th>${label}</th><th style="text-align:right">Closed Jan\u2013${thru} ${CUR_YEAR}</th>`+
+      `<th style="text-align:right">Plan Thru ${thru}</th><th style="text-align:right">Ahead / Behind Plan</th>`+
+      `<th style="text-align:right">Full-Year Plan</th><th class="pcol">% of Plan</th>`+
+      `<th style="text-align:right">Jan\u2013${thru} ${CH}</th><th style="text-align:right">vs ${CS}</th></tr></thead><tbody>`;
+    let T={cur:0,hist:0,plan:0,exp:0};
+    out.forEach(r=>{T.cur+=r.cur;T.hist+=r.hist;T.plan+=r.plan;T.exp+=r.expected;
+      h+=`<tr><td><b>${r.n}</b></td>`+
+        `<td style="text-align:right">${fmt(Math.round(r.cur))}</td>`+
+        `<td style="text-align:right">${r.expected?fmt(Math.round(r.expected)):'<span class="muted">&mdash;</span>'}</td>`+
+        `<td style="text-align:right">${r.expected?hVar(r.cur-r.expected):'<span class="muted">&mdash;</span>'}</td>`+
+        `<td style="text-align:right">${r.plan?fmt(Math.round(r.plan)):'<span class="muted">no plan</span>'}</td>`+
+        `<td class="pcol">${r.plan?pbar(r.att,r.att>=r.pc,null,r.pc):'<span class="muted">&mdash;</span>'}</td>`+
+        `<td style="text-align:right">${r.hist?fmt(Math.round(r.hist)):'<span class="muted">&mdash;</span>'}</td>`+
+        `<td style="text-align:right">${hVsHist(r.cur,r.hist)}</td></tr>`;});
+    if(!out.length)h+=`<tr><td colspan="8" class="muted" style="padding:18px">Nothing matches the current filters.</td></tr>`;
+    if(out.length){const att=T.plan?T.cur/T.plan:0;
+      h+=`</tbody><tfoot><tr class="fc-tot"><td><b>Total</b></td>`+
+        `<td style="text-align:right"><b>${fmt(Math.round(T.cur))}</b></td>`+
+        `<td style="text-align:right"><b>${T.exp?fmt(Math.round(T.exp)):'\u2014'}</b></td>`+
+        `<td style="text-align:right">${T.exp?hVar(T.cur-T.exp):'\u2014'}</td>`+
+        `<td style="text-align:right"><b>${T.plan?fmt(Math.round(T.plan)):'\u2014'}</b></td>`+
+        `<td class="pcol"><b>${T.plan?pct(att):'\u2014'}</b></td>`+
+        `<td style="text-align:right"><b>${T.hist?fmt(Math.round(T.hist)):'\u2014'}</b></td>`+
+        `<td style="text-align:right">${hVsHist(T.cur,T.hist)}</td></tr></tfoot>`;}
+    else h+='</tbody>';
+    h+='</table>';
+    document.getElementById(tblId).innerHTML=h;
+    return T;
+  }
+
+  const mkNames=uniq(rows.map(r=>r.market)).filter(Boolean).sort();
+  const prNames=uniq(rows.map(r=>r.practice)).filter(Boolean).sort();
+  const prFilter=hVal('hPractice');
+  const Tm=buildLevel('market',mkNames,m=>marketGoal(m,null,prFilter||null),'Market','hMktTbl');
+  document.getElementById('hMktDesc').innerHTML=`Every South region market with revenue or a plan this year. <b>Plan Thru ${thru}</b> = full-year plan &times; the share of a year historically closed by ${thru} (from ${CP}). Revenue basis: ${revTxt}.`;
+  buildLevel('practice',prNames,p=>{
+    let t=0;const mkF=hVal('hMarket');
+    Object.keys(DATA.planByPractice||{}).forEach(m=>{if(mkF&&m!==mkF)return;t+=(DATA.planByPractice[m][p]||0);});
+    return t;
+  },'Practice','hPracTbl');
+  document.getElementById('hPracDesc').innerHTML=`EB / HRC / P&amp;C, same comparison as the Market table above. Revenue basis: ${revTxt}.`;
+
+  // ---- producer level ----
+  // Market and Practice on DATA.producers are already resolved upstream (majority
+  // vote against each producer's own Client-level rows, done once in
+  // live-connect.js), so no fuzzy matching is needed here -- just compare directly.
+  const mkF=hVal('hMarket'),prF=hVal('hPractice'),pdF=hVal('hProducer'),st=hVal('hStatus');
+  let plist=DATA.producers.filter(p=>(!mkF||p.market===mkF)&&(!prF||p.practice===prF)&&(!pdF||p.producer===pdF)).map(p=>{
+    const set=DATA.cli.filter(r=>r.producer===p.producer&&(!prF||r.practice===prF));
+    const cur=hWindow(set,CUR_YEAR);
+    const hist=hCompWindow(set);
+    const att=p.goal?cur/p.goal:0;
+    const pc=paceFor(set);
+    return {...p,cur,hist,att,pc,gap:att-pc,expected:p.goal*pc};
+  });
+  if(st==='ahead')plist=plist.filter(p=>p.att>=p.pc);
+  if(st==='behind')plist=plist.filter(p=>p.att<p.pc&&p.cur>0);
+  if(st==='atrisk')plist=plist.filter(p=>p.cur<=0);
+  plist.sort((a,b)=>((a[hProdSort.k]<b[hProdSort.k]?-1:1)*hProdSort.d));
+  const pcols=[['producer','Producer'],['goal','Goal'],['cur','Closed Jan\u2013'+thru],
+    ['pipeline12','12-Mo Pipeline'],['expected','Goal Thru '+thru],['att','% of Goal'],
+    ['gap','Ahead / Behind Goal'],['hist','Jan\u2013'+thru+' '+CH]];
+  let ph='<table><thead><tr>'+pcols.map(c=>`<th class="${c[0]==='att'?'pcol':''}" onclick="sortPace('${c[0]}')">${c[1]}</th>`).join('')+`<th>vs ${CS}</th></tr></thead><tbody>`;
+  if(!plist.length)ph+='<tr><td colspan="9" class="muted" style="padding:18px">No producers match the current filters.</td></tr>';
+  plist.slice(0,400).forEach(p=>{ph+=`<tr><td><b>${p.producer}</b></td>`+
+    `<td>${fmtK(p.goal)}</td><td>${fmtK(p.cur)}</td><td>${fmtK(p.pipeline12)}</td>`+
+    `<td>${p.expected?fmtK(p.expected):'&mdash;'}</td>`+
+    `<td class="pcol">${pbar(p.att,p.att>=p.pc,null,p.pc)}</td>`+
+    `<td><span class="flag ${hFlag(p.gap,0,-0.15)}">${p.gap>=0?'+':''}${pct(p.gap)}</span></td>`+
+    `<td>${p.hist?fmtK(p.hist):'&mdash;'}</td><td>${hVsHist(p.cur,p.hist)}</td></tr>`;});
+  ph+='</tbody></table>';
+  document.getElementById('hProdTbl').innerHTML=ph;
+  document.getElementById('hProdDesc').innerHTML=
+    `Every producer with a revenue goal. Market and practice come from the filters above. `+
+    `<b>Goal Thru ${thru}</b> = <b>where the goal says they should be by now</b>: their full-year goal &times; the share of a year they historically have closed by ${thru} (from ${CP}). `+
+    `A producer is only averaged over years they actually sold in, so a newer producer is not penalized for years before they started. `+
+    `<b>Jan\u2013${thru} ${CH}</b> = <b>what they actually won in that window in those years</b>. `+
+    `Click a heading to sort. Revenue basis: ${revTxt}.`;
+
+  // ---- KPIs ----
+  const behind=plist.filter(p=>p.gap<0&&p.cur>0).length, none=plist.filter(p=>p.cur<=0).length;
+  document.getElementById('hKpis').innerHTML=
+    kpi('Closed Jan\u2013'+thru+' '+CUR_YEAR,fmtK(Tm.cur),revTxt,'green')+
+    kpi('Plan Thru '+thru,Tm.exp?fmtK(Tm.exp):'\u2014',Tm.plan?fmtK(Tm.plan)+' full-year plan \u00d7 '+pct(Tm.plan?Tm.exp/Tm.plan:0)+' \u2014 the share of a year historically closed by '+thru:'no plan in view','')+
+    kpi('Ahead / Behind Plan',(Tm.cur>=Tm.exp?'+':'\u2212')+fmtK(Math.abs(Tm.cur-Tm.exp)),Tm.plan?pct(Tm.plan?Tm.cur/Tm.plan:0)+' of the full-year plan closed':'no plan in view',Tm.cur>=Tm.exp?'green':'warm')+
+    kpi('Jan\u2013'+thru+' '+CH,Tm.hist?fmtK(Tm.hist):'\u2014',(hWinYears().length>1?('actual won, same period, averaged across '+hYrSpan(hWinYears())):('actual won, same period, '+hYrSpan(hWinYears()))),'yellow')+
+    kpi('vs '+CS,Tm.hist?((Tm.cur>=Tm.hist?'+':'\u2212')+Math.abs((Tm.cur/Tm.hist-1)*100).toFixed(0)+'%'):'\u2014',Tm.hist?((Tm.cur>=Tm.hist?'ahead of ':'behind ')+CH):'no revenue in the selected years',Tm.cur>=Tm.hist?'green':'warm')+
+    kpi('Producers Behind Their Goal Pace',behind,none?none+' more with nothing closed yet':'everyone has closed something','warm');
+}
+function sortPace(k){hProdSort.d=hProdSort.k===k?-hProdSort.d:-1;hProdSort.k=k;renderPacing();}
+// kept so older call sites (renderAll, etc.) keep working without hunting down every caller
+function renderHistorical(){renderPacing();}
+function renderProducers(){}
 
 /* ---------- PIPELINE ---------- */
 let pSort={k:'rev',d:-1};let pMonthFilter='';
 function renderPipeline(){
   const stage=document.getElementById('pStage').value,mkt=document.getElementById('pMarket').value,prod=document.getElementById('pProducer').value,flag=document.getElementById('pFlag').value,s=document.getElementById('pSearch').value.toLowerCase();
-  const ind=document.getElementById('pIndustry').value;
-  let rows=DATA.pipe.map(d=>{const mi=MONTHS.indexOf(d.month);const overdue=(d.year<CUR_YEAR)||(d.year===CUR_YEAR&&mi>=0&&mi<CUR_MONTH_IDX);return {...d,mi,overdue,weighted:d.rev*(STAGE_P[d.stage]||0)};}).filter(d=>(!stage||d.stage===stage)&&(!mkt||d.market===mkt)&&(!ind||indKey(d)===ind)&&(!prod||d.producer===prod)&&(!pMonthFilter||d.month===pMonthFilter)&&(!s||(d.company||'').toLowerCase().includes(s)));
+  const ind=document.getElementById('pIndustry').value,yr=document.getElementById('pHorizon').value;
+  let rows=DATA.pipe.map(d=>{const mi=MONTHS.indexOf(d.month);const overdue=(d.year<CUR_YEAR)||(d.year===CUR_YEAR&&mi>=0&&mi<CUR_MONTH_IDX);return {...d,mi,overdue,weighted:d.rev*(STAGE_P[d.stage]||0)};}).filter(d=>(!stage||d.stage===stage)&&(!mkt||d.market===mkt)&&(!ind||indKey(d)===ind)&&(!prod||d.producer===prod)&&(!yr||d.year===+yr)&&(!pMonthFilter||d.month===pMonthFilter)&&(!s||(d.company||'').toLowerCase().includes(s)));
   if(flag==='overdue')rows=rows.filter(d=>d.overdue);if(flag==='big')rows=rows.filter(d=>d.rev>=100000);
   rows.sort((a,b)=>(a[pSort.k]<b[pSort.k]?-1:1)*pSort.d);
   const raw=rows.reduce((a,d)=>a+d.rev,0),wt=rows.reduce((a,d)=>a+d.weighted,0),od=rows.filter(d=>d.overdue);
@@ -1407,6 +1914,7 @@ function renderPipeline(){
   const pinds=indList(rows);
   const pIndVals=pinds.map(k=>rows.filter(d=>indKey(d)===k).reduce((a,d)=>a+d.rev,0));
   CHARTS['pIndustryChart']=new Chart(document.getElementById('pIndustryChart'),{type:'bar',data:{labels:pinds.map(indShort),datasets:[{label:'Raw Pipeline $',data:pIndVals,backgroundColor:pinds.map(k=>k==='Unclassified'?C.lgray:C.lblue)}]},options:{indexAxis:'y',onClick:(e,el)=>{if(el.length){const k=pinds[el[0].index];const sel=document.getElementById('pIndustry');sel.value=(sel.value===k?'':k);renderPipeline();}},plugins:{legend:{display:false}},scales:{x:{ticks:{callback:v=>fmtK(v)}}}}});
+  render18MonthPipeline(rows);
   // table
   const cols=[['company','Company'],['producer','Producer'],['market','Market'],['industry','Industry'],['stage','Stage'],['rev','Revenue'],['weighted','Weighted'],['month','Close'],['overdue','Status']];
   let h='<table><thead><tr>'+cols.map(c=>`<th onclick="sortP('${c[0]}')">${c[1]}</th>`).join('')+'<th>Opp</th></tr></thead><tbody>';
@@ -1414,6 +1922,34 @@ function renderPipeline(){
   h+='</tbody></table>';document.getElementById('pTbl').innerHTML=h;
 }
 function sortP(k){pSort.d=pSort.k===k?-pSort.d:-1;pSort.k=k;renderPipeline();}
+/* ---------- PIPELINE: NEXT 18 MONTHS ---------- */
+// Builds the rolling 18-month window starting at the current Actuals-Through
+// month/year (not calendar January), so it always reads as "starting now."
+function next18Months(){
+  const out=[];
+  for(let i=0;i<18;i++){
+    const total=CUR_MONTH_IDX+i;
+    out.push({mi:total%12, year:CUR_YEAR+Math.floor(total/12)});
+  }
+  return out;
+}
+function render18MonthPipeline(rows){
+  const win=next18Months();
+  const vals=win.map(w=>rows.filter(d=>d.mi===w.mi&&d.year===w.year).reduce((a,d)=>a+d.weighted,0));
+  const rawVals=win.map(w=>rows.filter(d=>d.mi===w.mi&&d.year===w.year).reduce((a,d)=>a+d.rev,0));
+  const labels=win.map(w=>MONTHS[w.mi]+" '"+String(w.year).slice(2));
+  const descEl=document.getElementById('p18Desc');
+  if(descEl){const first=win[0],last=win[win.length-1];
+    descEl.innerHTML=`Weighted pipeline ($ &times; stage probability), by predicted close month, from <b>${MONTHS[first.mi]} ${first.year}</b> through <b>${MONTHS[last.mi]} ${last.year}</b> (18 months from the current Actuals-Through month). Uses whatever filters are set above.`;}
+  destroyChart('p18Chart');
+  CHARTS['p18Chart']=new Chart(document.getElementById('p18Chart'),{type:'bar',data:{labels,datasets:[{label:'Weighted Pipeline',data:vals,backgroundColor:C.blue}]},
+    options:{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>fmtK(v)}}}}});
+  let h='<table><thead><tr><th>Month</th><th>Raw Pipeline</th><th>Weighted Pipeline</th></tr></thead><tbody>';
+  win.forEach((w,i)=>{h+=`<tr><td><b>${labels[i]}</b></td><td>${fmtK(rawVals[i])}</td><td>${fmtK(vals[i])}</td></tr>`;});
+  const totRaw=rawVals.reduce((a,v)=>a+v,0),totW=vals.reduce((a,v)=>a+v,0);
+  h+=`<tr style="border-top:2px solid var(--lgray)"><td><b>18-Month Total</b></td><td><b>${fmtK(totRaw)}</b></td><td><b>${fmtK(totW)}</b></td></tr>`;
+  h+='</tbody></table>';document.getElementById('p18Tbl').innerHTML=h;
+}
 /* ---------- PIPELINE: PRODUCER GOAL TRACKER ---------- */
 function renderPipeGoal(prod,mkt,rawPipe,wtPipe){
   const el=document.getElementById('pGoalPanel');if(!el)return;
@@ -1468,7 +2004,7 @@ function gkpi(lbl,val,sub,cls){const bar={green:C.green,warm:C.orange,yellow:C.y
 /* ---------- INSIGHTS ---------- */
 function renderInsights(){
   const f=document.getElementById('insightFeed');let out=[];const pace=DATA.regionCurve[CUR_MONTH_IDX];
-  const regWon=DATA.cli.filter(r=>r.year===CUR_YEAR).reduce((a,r)=>a+r.won,0);const regGoal=DATA.producers.reduce((a,p)=>a+p.goal,0);const att=regGoal?regWon/regGoal:0;
+  const regWon=DATA.cli.filter(r=>r.year===CUR_YEAR).reduce((a,r)=>a+revVal(r),0);const regGoal=DATA.producers.reduce((a,p)=>a+p.goal,0);const att=regGoal?regWon/regGoal:0;
   out.push([`<b>Region pacing:</b> The South region has booked <b>${fmtK(regWon)}</b> of its <b>${fmtK(regGoal)}</b> plan (${pct(att)}). Expected seasonal pace by ${MONTHS[CUR_MONTH_IDX]} is <b>${pct(pace)}</b>, so the region is <b>${att>=pace?'AHEAD of':'BEHIND'}</b> its normal trajectory by ${pct(Math.abs(att-pace))}.`,att>=pace?'good':'alert']);
   const od=DATA.pipe.filter(d=>{const mi=MONTHS.indexOf(d.month);return (d.year<CUR_YEAR)||(d.year===CUR_YEAR&&mi<CUR_MONTH_IDX);});const odv=od.reduce((a,d)=>a+d.rev,0);
   out.push([`<b>Stale / overdue pipeline:</b> <b>${od.length} deals</b> worth <b>${fmtK(odv)}</b> have a predicted close date already in the past. Have producers re-date or push them this week. Filter the Pipeline tab by "Predicted Close in Past".`,'alert']);
@@ -1479,7 +2015,7 @@ function renderInsights(){
   const behind=DATA.producers.map(p=>({...p,att:p.goal?p.won/p.goal:0})).filter(p=>p.won>0&&p.att<pace).sort((a,b)=>b.goal-a.goal).slice(0,5);
   out.push([`<b>Biggest goals trailing pace:</b> ${behind.map(p=>`${p.producer} (${pct(p.att)} of ${fmtK(p.goal)}, ${fmtK(p.pipeline12)} pipeline)`).join('; ')}.`,'']);
   const priorY=DATA.years.filter(y=>y<CUR_YEAR);const mkts=uniq(DATA.cli.map(r=>r.market));
-  const mkAnalysis=mkts.map(m=>{const cur=DATA.cli.filter(r=>r.market===m&&r.year===CUR_YEAR&&MONTHS.indexOf(r.month)<=CUR_MONTH_IDX).reduce((a,r)=>a+r.won,0);const avg=priorY.map(y=>DATA.cli.filter(r=>r.market===m&&r.year===y&&MONTHS.indexOf(r.month)<=CUR_MONTH_IDX).reduce((a,r)=>a+r.won,0)).reduce((a,b)=>a+b,0)/Math.max(1,priorY.length);return {m,cur,avg,diff:avg?cur/avg-1:0};}).filter(x=>x.avg>0).sort((a,b)=>a.diff-b.diff);
+  const mkAnalysis=mkts.map(m=>{const cur=DATA.cli.filter(r=>r.market===m&&r.year===CUR_YEAR&&MONTHS.indexOf(r.month)<=CUR_MONTH_IDX).reduce((a,r)=>a+revVal(r),0);const avg=priorY.map(y=>DATA.cli.filter(r=>r.market===m&&r.year===y&&MONTHS.indexOf(r.month)<=CUR_MONTH_IDX).reduce((a,r)=>a+revVal(r),0)).reduce((a,b)=>a+b,0)/Math.max(1,priorY.length);return {m,cur,avg,diff:avg?cur/avg-1:0};}).filter(x=>x.avg>0).sort((a,b)=>a.diff-b.diff);
   const worst=mkAnalysis.slice(0,3),best=mkAnalysis.slice(-3).reverse();
   out.push([`<b>Behind their own history:</b> ${worst.map(x=>`${x.m} (${x.diff>=0?'+':''}${pct(x.diff)})`).join(', ')}. <b>Outperforming history:</b> ${best.map(x=>`${x.m} (+${pct(x.diff)})`).join(', ')} &mdash; study what they're doing differently.`,'']);
   const conv=DATA.cli.filter(r=>r.year===CUR_YEAR).reduce((a,r)=>a+r.conv,0);
@@ -1524,10 +2060,13 @@ function cascade(baseRows, spec){
 }
 function refreshFilterOptions(){
   const wYears=DATA.years.slice().sort((a,b)=>b-a);
-  cascadeOverview();cascadeWins();cascadeForecast();cascadeProducers();cascadePipeline();
+  cascadeOverview();cascadeWins();cascadeForecast();cascadePacing();cascadePipeline();
+  hBuildCompare();
   opt('wMonth',MONTHS);
   optKeep('wYear',wYears.map(String),'All Years');
   if(!_val('wYear'))document.getElementById('wYear').value=String(CUR_YEAR);
+  const pYears=uniq(DATA.pipe.map(d=>d.year).concat([CUR_YEAR,CUR_YEAR+1])).sort((a,b)=>b-a);
+  optKeep('pHorizon',pYears.map(String),'All Years');
   opt('iMarket',uniq(DATA.cli.filter(r=>r.year===CUR_YEAR).map(r=>r.market)));
 }
 // -- Overview: Practice, Market, Industry (base = current-year client rows) --
@@ -1550,20 +2089,25 @@ function cascadeWins(){
     wProducer:{field:'producer'}
   });
 }
-// -- Forecast & Commit: Market, Producer (base = producers with goals) --
+// -- Forecast & Commit: Market, Producer (base = current-year client rows; Practice
+// is a fixed EB/HRC/P&C/All list now, not cascaded) --
 function cascadeForecast(){
-  cascade(DATA.producers,{
+  cascade(DATA.cli.filter(r=>r.year===CUR_YEAR),{
     fcMarket:{field:'market'},
     fcProducer:{field:'producer'}
   });
 }
 // -- Producers: Market, Practice (base = producers with goals) --
-function cascadeProducers(){
-  cascade(DATA.producers,{
-    prProducer:{field:'producer'},
-    prMarket:{field:'market'},
-    prPractice:{field:'practice'}
-  });
+function cascadePacing(){
+  cascade(DATA.cli,{hMarket:{field:'market'},hPractice:{field:'practice'},hProducer:{field:'producer'}});
+  // Prefer each producer's own resolved home market (already majority-voted in
+  // live-connect.js) over raw cli-row membership, so a producer with a stray
+  // deal outside their market still shows up correctly under their real market.
+  const mkF=hVal('hMarket'),e=document.getElementById('hProducer');
+  if(mkF&&e){const cur=e.value;
+    const names=(DATA.producers||[]).filter(p=>p.market===mkF).map(p=>p.producer).sort();
+    e.innerHTML='<option value="">All</option>'+names.map(n=>`<option>${n}</option>`).join('');
+    if([...e.options].some(o=>o.value===cur))e.value=cur;}
 }
 // -- Pipeline: Market, Industry, Producer (base = open pipeline deals) --
 function cascadePipeline(){
@@ -1575,19 +2119,20 @@ function cascadePipeline(){
 }
 function renderIndustry(){
   const mkt=document.getElementById("iMarket").value;const mode=document.getElementById("iView").value;
-  const wonRows=DATA.cli.filter(r=>r.year===CUR_YEAR&&r.won>0&&(!mkt||r.market===mkt));
+  const wonRows=DATA.cli.filter(r=>r.year===CUR_YEAR&&revVal(r)>0&&(!mkt||r.market===mkt));
   const pipeRows=DATA.pipe.filter(d=>!mkt||d.market===mkt);
-  const wonTot=wonRows.reduce((a,r)=>a+r.won,0),pipeTot=pipeRows.reduce((a,d)=>a+d.rev,0);
+  const wonTot=wonRows.reduce((a,r)=>a+revVal(r),0),pipeTot=pipeRows.reduce((a,d)=>a+d.rev,0);
   const wInds=indList(wonRows),pInds=indList(pipeRows);
-  const wTop=wInds.map(k=>[k,wonRows.filter(r=>indKey(r)===k).reduce((a,r)=>a+r.won,0)]).sort((a,b)=>b[1]-a[1])[0];
+  const wTop=wInds.map(k=>[k,wonRows.filter(r=>indKey(r)===k).reduce((a,r)=>a+revVal(r),0)]).sort((a,b)=>b[1]-a[1])[0];
   const pTop=pInds.map(k=>[k,pipeRows.filter(d=>indKey(d)===k).reduce((a,d)=>a+d.rev,0)]).sort((a,b)=>b[1]-a[1])[0];
+  ['iScopeWord1','iScopeWord2'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=revScopeLabel();});
   document.getElementById("iKpis").innerHTML=
-    kpi("Won Revenue",fmtK(wonTot),(mkt||"All markets")+" &middot; current year","green")+
+    kpi("Won Revenue",fmtK(wonTot),(mkt||"All markets")+" &middot; current year, "+revScopeLabel(),"green")+
     kpi("Top Winning Industry",wTop?indShort(wTop[0]):"&mdash;",wTop?fmtK(wTop[1]):"","")+
     kpi("Open Pipeline",fmtK(pipeTot),(mkt||"All markets")+" &middot; raw","")+
     kpi("Top Prospecting Industry",pTop?indShort(pTop[0]):"&mdash;",pTop?fmtK(pTop[1]):"","yellow");
   const isRev=mode==="rev";
-  const wVals=wInds.map(k=>isRev?wonRows.filter(r=>indKey(r)===k).reduce((a,r)=>a+r.won,0):wonRows.filter(r=>indKey(r)===k).length);
+  const wVals=wInds.map(k=>isRev?wonRows.filter(r=>indKey(r)===k).reduce((a,r)=>a+revVal(r),0):wonRows.filter(r=>indKey(r)===k).length);
   const wPairs=wInds.map((k,i)=>[k,wVals[i]]).sort((a,b)=>b[1]-a[1]);
   destroyChart("iWonChart");
   CHARTS["iWonChart"]=new Chart(document.getElementById("iWonChart"),{type:"bar",data:{labels:wPairs.map(p=>indShort(p[0])),datasets:[{label:isRev?"Won $":"Wins",data:wPairs.map(p=>p[1]),backgroundColor:wPairs.map(p=>p[0]==="Unclassified"?C.lgray:C.green)}]},options:{indexAxis:"y",plugins:{legend:{display:false}},scales:{x:{ticks:{callback:v=>isRev?fmtK(v):v}}}}});
@@ -1597,18 +2142,22 @@ function renderIndustry(){
   CHARTS["iPipeChart"]=new Chart(document.getElementById("iPipeChart"),{type:"bar",data:{labels:pPairs.map(p=>indShort(p[0])),datasets:[{label:isRev?"Pipeline $":"Deals",data:pPairs.map(p=>p[1]),backgroundColor:pPairs.map(p=>p[0]==="Unclassified"?C.lgray:C.lblue)}]},options:{indexAxis:"y",plugins:{legend:{display:false}},scales:{x:{ticks:{callback:v=>isRev?fmtK(v):v}}}}});
   // matrix
   const mkts=uniq(DATA.cli.filter(r=>r.year===CUR_YEAR).map(r=>r.market));
-  const allInds=[...new Set([...indList(DATA.cli.filter(r=>r.year===CUR_YEAR&&r.won>0)),...indList(DATA.pipe)])].sort((a,b)=>a==="Unclassified"?1:(b==="Unclassified"?-1:(a<b?-1:1)));
+  const allInds=[...new Set([...indList(DATA.cli.filter(r=>r.year===CUR_YEAR&&revVal(r)>0)),...indList(DATA.pipe)])].sort((a,b)=>a==="Unclassified"?1:(b==="Unclassified"?-1:(a<b?-1:1)));
   let mx="<table><thead><tr><th>Industry</th>"+mkts.map(m=>"<th style='text-align:center'>"+m+"</th>").join("")+"<th style='text-align:center'>Total</th></tr></thead><tbody>";
   let maxW=0,maxP=0;const grid={};
-  allInds.forEach(ind=>{grid[ind]={};mkts.forEach(m=>{const w=DATA.cli.filter(r=>r.year===CUR_YEAR&&r.market===m&&indKey(r)===ind).reduce((a,r)=>a+r.won,0);const p=DATA.pipe.filter(d=>d.market===m&&indKey(d)===ind).reduce((a,d)=>a+d.rev,0);grid[ind][m]={w,p};if(w>maxW)maxW=w;if(p>maxP)maxP=p;});});
+  allInds.forEach(ind=>{grid[ind]={};mkts.forEach(m=>{const w=DATA.cli.filter(r=>r.year===CUR_YEAR&&r.market===m&&indKey(r)===ind).reduce((a,r)=>a+revVal(r),0);const p=DATA.pipe.filter(d=>d.market===m&&indKey(d)===ind).reduce((a,d)=>a+d.rev,0);grid[ind][m]={w,p};if(w>maxW)maxW=w;if(p>maxP)maxP=p;});});
   allInds.forEach(ind=>{let rowW=0,rowP=0;mx+="<tr><td><b>"+indShort(ind)+"</b></td>";mkts.forEach(m=>{const c=grid[ind][m];rowW+=c.w;rowP+=c.p;const wb=maxW?c.w/maxW:0,pb=maxP?c.p/maxP:0;const bg=wb>.5?"background:rgba(142,185,53,.18);":pb>.5?"background:rgba(79,179,205,.16);":"";mx+="<td style='text-align:center;"+bg+"'><span style='color:#3c6e00'>W "+(c.w?fmtK(c.w):"&mdash;")+"</span><br><span style='color:#0078a2'>P "+(c.p?fmtK(c.p):"&mdash;")+"</span></td>";});mx+="<td style='text-align:center'><b style='color:#3c6e00'>W "+fmtK(rowW)+"</b><br><b style='color:#0078a2'>P "+fmtK(rowP)+"</b></td></tr>";});
   mx+="</tbody></table>";document.getElementById("iMatrix").innerHTML=mx;
 }
-function renderAll(){renderOverview();renderWins();renderForecast();renderHistorical();renderProducers();renderPipeline();renderIndustry();renderInsights();}
-const VMAP={ov:'overview',w:'wins',fc:'forecast',h:'historical',pr:'producers',p:'pipeline',i:'industry'};
-function resetFilters(pfx){const v=VMAP[pfx];document.querySelectorAll(`#v-${v} select, #v-${v} input`).forEach(e=>e.value='');if(pfx==='w')document.getElementById('wYear').value=String(CUR_YEAR);if(pfx==='p')pMonthFilter='';
+function renderAll(){renderOverview();renderWins();renderForecast();renderPacing();renderPipeline();renderIndustry();renderInsights();}
+const VMAP={ov:'overview',w:'wins',fc:'forecast',h:'historical',p:'pipeline',i:'industry'};
+function resetFilters(pfx){const v=VMAP[pfx];
+  document.querySelectorAll(`#v-${v} select, #v-${v} input`).forEach(e=>{if(e.type==='checkbox')return;e.value='';});
+  if(pfx==='w')document.getElementById('wYear').value=String(CUR_YEAR);if(pfx==='p')pMonthFilter='';
+  if(pfx==='h'){const LY=hLastYear();document.querySelectorAll('#hCompare input.hcy').forEach(c=>{c.checked=(+c.value===LY);});hComparePaint();}
+  if(pfx==='fc'){document.getElementById('fcPeriod').value='q';document.getElementById('fcInclude').value='h';document.getElementById('fcPractice').value='EB';FC_CHART_VIEW='market';document.querySelectorAll('#fcChartSeg .fc-segbtn').forEach(b=>b.classList.toggle('active',b.getAttribute('data-v')==='market'));}
   // re-expand this tab's cascaded dropdowns back to their full lists
-  ({ov:cascadeOverview,w:cascadeWins,fc:cascadeForecast,pr:cascadeProducers,p:cascadePipeline}[pfx]||function(){})();
+  ({ov:cascadeOverview,w:cascadeWins,fc:cascadeForecast,h:cascadePacing,p:cascadePipeline}[pfx]||function(){})();
   renderAll();}
 
 function boot(){
@@ -1623,17 +2172,19 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelect
 // Cascading: when a filter that narrows OTHER dropdowns changes, re-cascade first, then render.
 ['ovPractice','ovMarket','ovIndustry'].forEach(id=>document.getElementById(id).onchange=()=>{cascadeOverview();renderOverview();});
 document.getElementById('ovMetric').onchange=renderOverview;
+document.getElementById('gRev').onchange=(e)=>{REV_SCOPE=e.target.value;renderAll();};
 ['wRegion','wMarket','wPractice','wIndustry','wProducer','wYear'].forEach(id=>document.getElementById(id).onchange=()=>{cascadeWins();renderWins();});
 document.getElementById('wMonth').onchange=renderWins;
 document.getElementById('wSearch').oninput=renderWins;
-document.getElementById('fcWindow').onchange=renderForecast;
+document.getElementById('fcPeriod').onchange=renderForecast;
 document.getElementById('fcProducer').onchange=()=>{cascadeForecast();renderForecast();};
 document.getElementById('fcMarket').onchange=()=>{cascadeForecast();mmrInitForm();renderForecast();};
-['hLevel','hEntity'].forEach(id=>document.getElementById(id).onchange=renderHistorical);
-['prProducer','prMarket','prPractice'].forEach(id=>document.getElementById(id).onchange=()=>{cascadeProducers();renderProducers();});
-document.getElementById('prStatus').onchange=renderProducers;
+document.getElementById('fcPractice').onchange=renderForecast;
+document.getElementById('fcInclude').onchange=renderForecast;
+['hMarket','hPractice','hProducer'].forEach(id=>document.getElementById(id).onchange=()=>{cascadePacing();renderPacing();});
+document.getElementById('hStatus').onchange=renderPacing;
 ['pMarket','pIndustry','pProducer'].forEach(id=>document.getElementById(id).onchange=()=>{cascadePipeline();renderPipeline();});
-['pStage','pFlag'].forEach(id=>document.getElementById(id).onchange=renderPipeline);
+['pStage','pFlag','pHorizon'].forEach(id=>document.getElementById(id).onchange=renderPipeline);
 ['iMarket','iView'].forEach(id=>document.getElementById(id).onchange=renderIndustry);
 document.getElementById('pSearch').oninput=renderPipeline;
 
